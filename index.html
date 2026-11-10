@@ -679,7 +679,7 @@
             for (let item of webinars) {
                 if (item.sheetUrl) {
                     try {
-                        const res = await fetch(item.sheetUrl);
+                        const res = await fetch(item.sheetUrl, { redirect: 'follow' });
                         const data = await res.json();
                         const count = data.count !== undefined ? data.count : (data.total !== undefined ? data.total : null);
                         if (count !== null && item.registered !== count) {
@@ -687,7 +687,7 @@
                             updated = true;
                         }
                     } catch (e) {
-                        // Silencioso
+                        // Silencioso en auto-sync
                     }
                 }
             }
@@ -982,7 +982,7 @@
             }
 
             try {
-                const res = await fetch(url);
+                const res = await fetch(url, { redirect: 'follow' });
                 const data = await res.json();
                 
                 if (data && (data.count !== undefined || data.total !== undefined)) {
@@ -990,10 +990,10 @@
                     document.getElementById(targetInputId).value = count;
                     alert(`¡Inscritos actualizados exitosamente! Conteo obtenido: ${count}`);
                 } else {
-                    alert('No se obtuvo el parámetro "count". Verifica el Apps Script.');
+                    alert('No se obtuvo el parámetro "count". Verifica el código en Apps Script.');
                 }
             } catch (err) {
-                alert('Error de conexión con la URL de Apps Script.');
+                alert('Error de conexión con la URL de Apps Script.\n\nPor favor verifica:\n1. Que en Apps Script hayas elegido "Quién tiene acceso: Cualquier persona" (Anyone).\n2. Que estés usando el enlace de la "Nueva implementación".');
             }
         }
 
