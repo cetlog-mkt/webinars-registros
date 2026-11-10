@@ -496,6 +496,11 @@
                         <input type="url" id="form-presentation" placeholder="https://drive.google.com/..." class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange">
                     </div>
 
+                    <div>
+                        <label class="block font-semibold text-cetlog-blue mb-1">URL de la Sala de Zoom (Para Cohost)</label>
+                        <input type="url" id="form-zoom-url" placeholder="https://zoom.us/j/..." class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange">
+                    </div>
+
                     <div class="bg-cetlog-surface p-3 rounded-lg border border-slate-200 space-y-1.5">
                         <label class="block text-[10px] text-cetlog-blue font-bold uppercase tracking-wider">URL Apps Script (Conteo de Inscritos)</label>
                         <input type="url" id="form-sheet-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-1.5 bg-white border border-cetlog-border rounded text-[11px] focus:outline-none focus:border-cetlog-orange">
@@ -559,6 +564,7 @@
                 host: 'María Fernández',
                 hostPhoto: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
                 presentationUrl: 'https://drive.google.com',
+                zoomUrl: 'https://zoom.us/j/1234567890',
                 sheetUrl: '',
                 registered: 340,
                 attended: 0,
@@ -575,6 +581,7 @@
                 host: 'Ana María Torres',
                 hostPhoto: '',
                 presentationUrl: 'https://drive.google.com',
+                zoomUrl: '',
                 sheetUrl: '',
                 registered: 512,
                 attended: 310,
@@ -859,6 +866,25 @@
                 linkContainer.innerHTML = `<span class="text-slate-400 font-medium">Sin enlace</span>`;
             }
 
+            // Enlace/Botón Sala Zoom (Para Cohost)
+            const zoomContainer = document.getElementById('detail-zoom-container');
+            if (item.zoomUrl) {
+                zoomContainer.innerHTML = `
+                    <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                        <a href="${escapeHtml(item.zoomUrl)}" target="_blank" class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs transition-colors shadow-sm gap-2">
+                            <i class="ph-bold ph-video-camera text-base"></i>
+                            <span>Ingresar a Sala Zoom</span>
+                        </a>
+                        <button onclick="copyToClipboard('${escapeHtml(item.zoomUrl)}')" class="px-3 py-2 bg-white border border-blue-200 hover:bg-blue-50 text-blue-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1 shrink-0">
+                            <i class="ph-bold ph-copy text-sm"></i>
+                            <span>Copiar Enlace</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                zoomContainer.innerHTML = `<p class="text-slate-400 font-medium text-[11px] italic">No se ha registrado una URL de Zoom para este evento.</p>`;
+            }
+
             // Fotos y Equipo Responsable
             document.getElementById('detail-instructor-name').innerText = item.instructor || 'No asignado';
             document.getElementById('detail-instructor-avatar-container').innerHTML = getAvatarHTML(item.instructor, item.instructorPhoto, 'w-10 h-10 text-xs');
@@ -928,6 +954,7 @@
             document.getElementById('form-host').value = item.host || '';
             document.getElementById('form-host-photo').value = item.hostPhoto || '';
             document.getElementById('form-presentation').value = item.presentationUrl || '';
+            document.getElementById('form-zoom-url').value = item.zoomUrl || '';
             document.getElementById('form-sheet-url').value = item.sheetUrl || '';
             document.getElementById('form-registered').value = item.registered || 0;
             document.getElementById('form-attended').value = item.attended || 0;
@@ -951,6 +978,7 @@
                 host: document.getElementById('form-host').value.trim(),
                 hostPhoto: document.getElementById('form-host-photo').value.trim(),
                 presentationUrl: document.getElementById('form-presentation').value.trim(),
+                zoomUrl: document.getElementById('form-zoom-url').value.trim(),
                 sheetUrl: document.getElementById('form-sheet-url').value.trim(),
                 registered: parseInt(document.getElementById('form-registered').value) || 0,
                 attended: parseInt(document.getElementById('form-attended').value) || 0,
@@ -991,6 +1019,7 @@
             }
 
             try {
+                // CORRECCIÓN APLICADA AQUÍ: Se añadió { redirect: 'follow' }
                 const res = await fetch(url, { redirect: 'follow' });
                 const data = await res.json();
                 
@@ -1007,24 +1036,24 @@
         }
 
         // GENERADOR DE AVATARES E IMÁGENES CON INICIALES FALLBACK
-        function getAvatarHTML(name, photoUrl, sizeClass = 'w-8 h-8 text-xs') {
-            if (photoUrl) {
-                return `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(name || '')}" class="${sizeClass} rounded-full object-cover border border-slate-200 shrink-0" onerror="this.onerror=null; this.parentNode.innerHTML=getInitialsAvatar('${escapeHtml(name || '')}', '${sizeClass}');">`;
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('¡Enlace de Zoom copiado al portapapeles!');
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('¡Enlace de Zoom copiado al portapapeles!');
+                } catch (err) {
+                    alert('No se pudo copiar automáticamente. Copia el enlace manualmente: ' + text);
+                }
+                document.body.removeChild(textArea);
             }
-            return getInitialsAvatar(name, sizeClass);
-        }
-
-        function getInitialsAvatar(name, sizeClass = 'w-8 h-8 text-xs') {
-            const cleanName = (name || 'CETLOG').trim();
-            const parts = cleanName.split(' ');
-            let initials = 'C';
-            if (parts.length >= 2) {
-                initials = (parts[0][0] + parts[1][0]).toUpperCase();
-            } else if (cleanName.length > 0) {
-                initials = cleanName.substring(0, 2).toUpperCase();
-            }
-
-            return `<div class="${sizeClass} rounded-full bg-cetlog-blue text-white font-extrabold flex items-center justify-center shrink-0 border border-slate-200 tracking-wider">${initials}</div>`;
         }
 
         // FUNCIONES DE UTILIDAD
@@ -1034,6 +1063,32 @@
             if (parts.length !== 3) return dateStr;
             const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             return `${parts[2]} ${months[parseInt(parts[1]) - 1]} ${parts[0]}`;
+        }
+
+        function getAvatarHTML(name, photoUrl, sizeClasses = 'w-8 h-8 text-xs') {
+            if (photoUrl && photoUrl.trim() !== '') {
+                return `
+                    <img src="${escapeHtml(photoUrl)}" 
+                         alt="${escapeHtml(name || 'Equipo')}" 
+                         class="${sizeClasses} rounded-full object-cover border border-slate-200 shrink-0 shadow-sm"
+                         onerror="this.onerror=null; this.parentElement.innerHTML=getAvatarHTML('${escapeHtml(name || '')}', '', '${sizeClasses}');">
+                `;
+            }
+
+            const cleanName = (name || 'C').trim();
+            const words = cleanName.split(' ').filter(w => w.length > 0);
+            let initials = 'C';
+            if (words.length >= 2) {
+                initials = (words[0][0] + words[1][0]).toUpperCase();
+            } else if (words.length === 1 && words[0].length > 0) {
+                initials = words[0][0].toUpperCase();
+            }
+
+            return `
+                <div class="${sizeClasses} rounded-full bg-cetlog-blue text-white font-bold flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
+                    ${initials}
+                </div>
+            `;
         }
 
         function getStatusBadgeHTML(status) {
