@@ -47,7 +47,6 @@
             color: #1E2446;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -71,28 +70,30 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
-                <!-- Logo Marca CETLOG en Imagen -->
                 <div class="flex items-center space-x-3">
                     <img src="logocolor.png" 
                          alt="Logo CETLOG" 
                          class="h-9 w-auto object-contain"
                          onerror="this.onerror=null; this.src='logocolor.png';">
-                    <span class="text-xs font-semibold text-cetlog-orange uppercase tracking-wider hidden sm:inline border-l border-cetlog-border pl-2.5">Webinars</span>
+                    <span class="text-xs font-semibold text-cetlog-orange uppercase tracking-wider hidden sm:inline border-l border-cetlog-border pl-2.5">Registro Webinars</span>
                 </div>
 
-                <!-- Botón de Acción Principal -->
                 <div class="flex items-center space-x-2 sm:space-x-3">
+                    <button onclick="fetchCloudData()" title="Sincronizar Datos" class="p-2 text-cetlog-blue bg-cetlog-surface rounded-lg border border-cetlog-border hover:bg-slate-100 transition-colors">
+                        <i class="ph-bold ph-arrows-clockwise text-base"></i>
+                    </button>
+
                     <button onclick="toggleFilterMobile()" class="md:hidden p-2 text-cetlog-blue bg-cetlog-surface rounded-lg border border-cetlog-border">
                         <i class="ph-bold ph-funnel text-base"></i>
                     </button>
 
-                        <a href="https://drive.google.com/drive/folders/16mdT1wc-8MYGIO_m2YgB1da-0I3poR8P?usp=sharing" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="inline-flex items-center px-3 py-2 bg-cetlog-surface hover:bg-gray-100 text-cetlog-blue border border-cetlog-border text-xs font-bold rounded-lg transition-all shadow-sm">
+                    <a href="https://drive.google.com/drive/folders/16mdT1wc-8MYGIO_m2YgB1da-0I3poR8P?usp=sharing" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="inline-flex items-center px-3 py-2 bg-cetlog-surface hover:bg-gray-100 text-cetlog-blue border border-cetlog-border text-xs font-bold rounded-lg transition-all shadow-sm">
                         <i class="ph-bold ph-folder-open mr-1.5 text-cetlog-orange text-sm"></i>
                         <span class="hidden sm:inline">Fondos Zoom</span>
-                        </a>
+                    </a>
                     
                     <button onclick="openModal()" class="inline-flex items-center px-3.5 py-2 bg-cetlog-orange hover:bg-cetlog-orangeHover text-white text-xs font-bold rounded-lg transition-all shadow-sm active:scale-95">
                         <i class="ph-bold ph-plus mr-1.5 text-sm"></i>
@@ -106,15 +107,16 @@
     <!-- CONTAINER PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6 w-full">
 
-        <!-- 2. RESUMEN GENERAL (KPIS COMPACTOS 2 COLUMNAS EN MÓVIL / 4 EN ESCRITORIO) -->
+        <!-- 2. RESUMEN GENERAL -->
         <section>
             <div class="mb-2.5 flex items-center justify-between">
                 <h2 class="text-xs font-bold uppercase tracking-wider text-cetlog-grayText">Resumen General</h2>
-                <span class="text-[11px] text-slate-400 font-medium">Actualizado localmente</span>
+                <span id="sync-status" class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                    <i class="ph-bold ph-cloud-check text-sm"></i> Nube Sincronizada
+                </span>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <!-- KPI 1 -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
                         <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Programados</p>
@@ -125,7 +127,6 @@
                     </div>
                 </div>
 
-                <!-- KPI 2 -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
                         <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Total Inscritos</p>
@@ -136,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- KPI 3 -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
                         <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Ingresaron Zoom</p>
@@ -147,7 +147,6 @@
                     </div>
                 </div>
 
-                <!-- KPI 4 -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm border-l-4 border-l-cetlog-orange">
                     <div>
                         <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Certificados</p>
@@ -160,9 +159,8 @@
             </div>
         </section>
 
-        <!-- 3. BARRA DE FILTROS (DESPLEGABLE EN MÓVIL) -->
+        <!-- 3. BARRA DE FILTROS -->
         <section class="bg-white border border-cetlog-border rounded-xl p-3.5 shadow-sm space-y-3">
-            
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="text-xs font-bold text-cetlog-blue flex items-center gap-1.5">
@@ -176,23 +174,18 @@
                 </button>
             </div>
 
-            <!-- Contenedor Filtros -->
             <div id="filter-container" class="hidden md:flex flex-col md:flex-row gap-2.5 items-stretch md:items-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
-                
-                <!-- Búsqueda -->
                 <div class="relative flex-1">
                     <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar por tema, instructor o host..." class="w-full pl-9 pr-3 py-1.5 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs text-cetlog-blue focus:outline-none focus:border-cetlog-orange transition-colors">
                 </div>
 
-                <!-- Filtro Año -->
                 <select id="filter-year" onchange="applyFilters()" class="bg-cetlog-bgLight border border-cetlog-border text-xs text-cetlog-blue rounded-lg px-3 py-1.5 focus:outline-none focus:border-cetlog-orange font-medium">
                     <option value="ALL">Todos los años</option>
                     <option value="2026" selected>Año 2026</option>
                     <option value="2025">Año 2025</option>
                 </select>
 
-                <!-- Filtro Mes -->
                 <select id="filter-month" onchange="applyFilters()" class="bg-cetlog-bgLight border border-cetlog-border text-xs text-cetlog-blue rounded-lg px-3 py-1.5 focus:outline-none focus:border-cetlog-orange font-medium">
                     <option value="ALL">Todos los meses</option>
                     <option value="0">Enero</option>
@@ -209,7 +202,6 @@
                     <option value="11">Diciembre</option>
                 </select>
 
-                <!-- Filtro Estado -->
                 <select id="filter-status" onchange="applyFilters()" class="bg-cetlog-bgLight border border-cetlog-border text-xs text-cetlog-blue rounded-lg px-3 py-1.5 focus:outline-none focus:border-cetlog-orange font-medium">
                     <option value="ALL">Todos los estados</option>
                     <option value="Programado">Programado</option>
@@ -217,22 +209,16 @@
                     <option value="Cancelado">Cancelado</option>
                 </select>
 
-                <!-- Restablecer Filtros -->
                 <button onclick="resetFilters()" title="Limpiar Filtros" class="p-1.5 text-cetlog-grayText hover:text-cetlog-orange border border-cetlog-border rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center">
                     <i class="ph-bold ph-arrow-counter-clockwise text-sm"></i>
                 </button>
             </div>
         </section>
 
-        <!-- 4. VISTA DUAL: TARJETAS MÓVILES / TABLA ESCRITORIO -->
+        <!-- 4. VISTA TARJETAS MÓVILES / TABLA ESCRITORIO -->
         <section class="bg-white border border-cetlog-border rounded-xl shadow-sm overflow-hidden">
-            
-            <!-- VISTA MOBILE: LISTA DE TARJETAS COMPACTAS -->
-            <div id="mobile-cards-container" class="md:hidden divide-y divide-slate-100 p-3 space-y-3">
-                <!-- Se inyecta dinámicamente mediante JS -->
-            </div>
+            <div id="mobile-cards-container" class="md:hidden divide-y divide-slate-100 p-3 space-y-3"></div>
 
-            <!-- VISTA ESCRITORIO: TABLA LIMPIA Y ESTRUCTURADA -->
             <div id="view-container-summary" class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -255,19 +241,15 @@
                             <th class="py-3 px-4 text-center w-32">Acción</th>
                         </tr>
                     </thead>
-                    <tbody id="summary-table-body" class="divide-y divide-slate-100 text-xs">
-                        <!-- Filas cargadas dinámicamente -->
-                    </tbody>
+                    <tbody id="summary-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
                 </table>
             </div>
 
-            <!-- Estado Vacío -->
             <div id="empty-state" class="py-12 text-center hidden">
                 <i class="ph-bold ph-folder-open text-3xl text-slate-300"></i>
-                <p class="text-xs text-cetlog-grayText mt-2 font-medium">No se encontraron webinars con los filtros seleccionados.</p>
+                <p class="text-xs text-cetlog-grayText mt-2 font-medium">No se encontraron webinars registrados.</p>
             </div>
         </section>
-
     </main>
 
     <!-- FOOTER INSTITUCIONAL -->
@@ -277,16 +259,14 @@
                 <strong class="text-cetlog-blue">CETLOG</strong> &copy; 2026 — Plataforma Privada de Gestión de Webinars
             </div>
             <div class="text-slate-400">
-                Los datos con etiqueta <span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-mono text-[10px]">DEMO</span> son exclusivamente de prueba.
+                Sincronización en la Nube con JSONBin
             </div>
         </div>
     </footer>
 
-    <!-- 5. PANEL LATERAL / DRAWER: DETALLE INDIVIDUAL CON EQUIPO Y FOTOS -->
+    <!-- 5. PANEL LATERAL / DRAWER DE DETALLE -->
     <div id="detail-drawer" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex justify-end">
         <div class="bg-white w-full max-w-lg h-full shadow-2xl flex flex-col justify-between border-l border-cetlog-border animate-in slide-in-from-right duration-200">
-            
-            <!-- Header Drawer -->
             <div class="px-5 py-4 border-b border-cetlog-border flex items-center justify-between bg-cetlog-surface">
                 <div>
                     <span id="detail-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider"></span>
@@ -297,10 +277,7 @@
                 </button>
             </div>
 
-            <!-- Body Drawer -->
             <div class="p-5 overflow-y-auto space-y-5 flex-1 text-xs">
-                
-                <!-- A. Información del Evento -->
                 <div>
                     <label class="text-[10px] font-bold uppercase text-cetlog-grayText tracking-wider">Nombre del Evento</label>
                     <h2 class="text-base font-extrabold text-cetlog-blue mt-1 leading-snug" id="detail-title">-</h2>
@@ -313,35 +290,25 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Material de Presentación</p>
-                        <div id="detail-link-container" class="mt-0.5">
-                            <!-- Inyectado por JS -->
-                        </div>
+                        <div id="detail-link-container" class="mt-0.5"></div>
                     </div>
                 </div>
 
-                <!-- B. Equipo Responsable (Fotografías y Roles) -->
                 <div class="border border-cetlog-border rounded-xl p-4 space-y-3 bg-white">
                     <h4 class="text-[11px] font-bold text-cetlog-blue uppercase tracking-wider flex items-center gap-1.5">
                         <i class="ph-bold ph-user-circle text-cetlog-orange text-sm"></i> Equipo a Cargo
                     </h4>
-                    
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                        <!-- Instructor Card -->
                         <div class="flex items-center space-x-3 p-2 rounded-lg bg-cetlog-bgLight border border-slate-100">
-                            <div id="detail-instructor-avatar-container" class="shrink-0">
-                                <!-- Avatar o Foto -->
-                            </div>
+                            <div id="detail-instructor-avatar-container" class="shrink-0"></div>
                             <div class="overflow-hidden">
                                 <span class="text-[9px] font-bold text-cetlog-orange uppercase block">Instructor</span>
                                 <p class="text-xs font-bold text-cetlog-blue truncate" id="detail-instructor-name">-</p>
                             </div>
                         </div>
 
-                        <!-- Host Card -->
                         <div class="flex items-center space-x-3 p-2 rounded-lg bg-cetlog-bgLight border border-slate-100">
-                            <div id="detail-host-avatar-container" class="shrink-0">
-                                <!-- Avatar o Foto -->
-                            </div>
+                            <div id="detail-host-avatar-container" class="shrink-0"></div>
                             <div class="overflow-hidden">
                                 <span class="text-[9px] font-bold text-blue-600 uppercase block">Host / Moderador</span>
                                 <p class="text-xs font-bold text-cetlog-blue truncate" id="detail-host-name">-</p>
@@ -350,12 +317,10 @@
                     </div>
                 </div>
 
-                <!-- C. Resultados y Barras Comparativas -->
                 <div class="border border-cetlog-border rounded-xl p-4 space-y-4 bg-white">
                     <h4 class="text-[11px] font-bold text-cetlog-blue uppercase tracking-wider flex items-center gap-1.5">
                         <i class="ph-bold ph-chart-bar-horizontal text-cetlog-orange text-sm"></i> Resultados de Participación
                     </h4>
-
                     <div class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-cetlog-surface p-2.5 rounded-lg border border-slate-200">
                             <span class="text-[9px] text-cetlog-grayText font-bold block uppercase">Inscritos</span>
@@ -371,7 +336,6 @@
                         </div>
                     </div>
 
-                    <!-- Visual Progress Bars -->
                     <div class="space-y-3 pt-1">
                         <div>
                             <div class="flex justify-between text-[11px] mb-1 font-medium">
@@ -382,7 +346,6 @@
                                 <div id="bar-attendance" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-
                         <div>
                             <div class="flex justify-between text-[11px] mb-1 font-medium">
                                 <span class="text-cetlog-grayText">Certificados Emitidos vs. Inscritos</span>
@@ -395,7 +358,6 @@
                     </div>
                 </div>
 
-                <!-- D. Acceso Directo a Sala Zoom para Cohost -->
                 <div class="border border-blue-100 bg-blue-50/50 rounded-xl p-4 space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -403,22 +365,19 @@
                         </span>
                         <span class="text-[10px] text-blue-600 font-semibold bg-blue-100 px-2 py-0.5 rounded-full">Acceso Cohost</span>
                     </div>
-                    <div id="detail-zoom-container">
-                        <!-- Enlace o botón inyectado por JS -->
-                    </div>
+                    <div id="detail-zoom-container"></div>
                 </div>
 
-                <!-- Conexión Sheets Status -->
                 <div class="bg-cetlog-surface border border-slate-200 rounded-lg p-3 space-y-1 text-[11px]">
                     <div class="flex items-center justify-between">
-                        <span class="text-cetlog-grayText font-medium">Estado Conexión Sheets:</span>
-                        <span id="detail-sheet-status" class="font-bold"></span>
+                        <span class="text-cetlog-grayText font-medium">Estado Conexión Cloud:</span>
+                        <span id="detail-sheet-status" class="font-bold text-emerald-600 flex items-center gap-1">
+                            <i class="ph-bold ph-check-circle"></i> Sincronizado
+                        </span>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Footer Drawer -->
             <div class="p-4 border-t border-cetlog-border bg-cetlog-surface flex gap-2 justify-end">
                 <button id="btn-edit-current" onclick="" class="px-3.5 py-2 bg-white border border-cetlog-border hover:border-cetlog-blue text-cetlog-blue font-bold rounded-lg text-xs transition-colors">
                     <i class="ph-bold ph-pencil mr-1"></i> Editar Evento
@@ -430,11 +389,9 @@
         </div>
     </div>
 
-    <!-- 6. MODAL REGISTRO / EDICIÓN ORGANIZADO POR CATEGORÍAS -->
+    <!-- 6. MODAL REGISTRO / EDICIÓN -->
     <div id="modal-form" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl border border-cetlog-border overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
-            
-            <!-- Header Modal -->
             <div class="px-5 py-4 border-b border-cetlog-border flex items-center justify-between bg-cetlog-surface">
                 <h3 id="modal-title" class="text-xs font-extrabold text-cetlog-blue flex items-center gap-2 uppercase tracking-wider">
                     <i class="ph-bold ph-plus-circle text-cetlog-orange text-base"></i> Registrar Nuevo Webinar
@@ -444,14 +401,11 @@
                 </button>
             </div>
 
-            <!-- Body Modal Form -->
             <form id="webinar-form" onsubmit="saveWebinar(event)" class="p-5 space-y-4 text-xs">
                 <input type="hidden" id="form-id">
 
-                <!-- CATEGORÍA 1: INFORMACIÓN GENERAL -->
                 <div class="space-y-3">
                     <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">1. Información General</h4>
-                    
                     <div>
                         <label class="block font-semibold text-cetlog-blue mb-1">Nombre del Webinar *</label>
                         <input type="text" id="form-title" required placeholder="Ej: Gestión de Almacenes e Inventarios 2026" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange font-medium">
@@ -473,10 +427,8 @@
                     </div>
                 </div>
 
-                <!-- CATEGORÍA 2: EQUIPO RESPONSABLE -->
                 <div class="space-y-3 pt-2">
                     <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">2. Equipo Responsable</h4>
-                    
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-semibold text-cetlog-blue mb-1">Nombre Instructor</label>
@@ -500,10 +452,8 @@
                     </div>
                 </div>
 
-                <!-- CATEGORÍA 3: MATERIAL DE PRESENTACIÓN Y CONEXIÓN -->
                 <div class="space-y-3 pt-2">
                     <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">3. Material y Conexión Automática</h4>
-                    
                     <div>
                         <label class="block font-semibold text-cetlog-blue mb-1">Enlace Presentación (Drive / PDF)</label>
                         <input type="url" id="form-presentation" placeholder="https://drive.google.com/..." class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange">
@@ -514,438 +464,343 @@
                         <input type="url" id="form-zoom-url" placeholder="https://zoom.us/j/..." class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange">
                     </div>
 
-                    <div class="bg-cetlog-surface p-3 rounded-lg border border-slate-200 space-y-1.5">
-                        <label class="block text-[10px] text-cetlog-blue font-bold uppercase tracking-wider">URL Apps Script (Conteo de Inscritos)</label>
-                        <input type="url" id="form-sheet-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-1.5 bg-white border border-cetlog-border rounded text-[11px] focus:outline-none focus:border-cetlog-orange">
+                    <div>
+                        <label class="block font-semibold text-cetlog-blue mb-1">URL Apps Script (Conteo de Inscritos Formulario)</label>
+                        <input type="url" id="form-sheet-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange">
                     </div>
                 </div>
 
-                <!-- CATEGORÍA 4: ESTADÍSTICAS Y RESULTADOS -->
                 <div class="space-y-3 pt-2">
                     <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">4. Estadísticas del Webinar</h4>
-                    
                     <div class="grid grid-cols-3 gap-3">
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-semibold text-cetlog-blue">Inscritos</label>
-                                <button type="button" onclick="syncSingleField('sheetUrl', 'form-registered')" class="text-[10px] font-bold text-cetlog-orange hover:underline">
-                                    <i class="ph-bold ph-arrows-clockwise"></i> Auto
-                                </button>
-                            </div>
-                            <input type="number" min="0" id="form-registered" value="0" class="w-full px-3 py-2 border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange font-bold text-cetlog-blue">
+                            <label class="block font-semibold text-cetlog-blue mb-1">Inscritos</label>
+                            <input type="number" min="0" id="form-registered" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-cetlog-blue focus:outline-none focus:border-cetlog-orange">
                         </div>
                         <div>
                             <label class="block font-semibold text-cetlog-blue mb-1">Zoom</label>
-                            <input type="number" min="0" id="form-attended" value="0" class="w-full px-3 py-2 border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange font-bold text-blue-600">
+                            <input type="number" min="0" id="form-attended" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-blue-600 focus:outline-none focus:border-cetlog-orange">
                         </div>
                         <div>
                             <label class="block font-semibold text-cetlog-blue mb-1">Certificados</label>
-                            <input type="number" min="0" id="form-certificates" value="0" class="w-full px-3 py-2 border border-cetlog-border rounded-lg text-xs focus:outline-none focus:border-cetlog-orange font-bold text-cetlog-orange">
+                            <input type="number" min="0" id="form-certificates" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-cetlog-orange focus:outline-none focus:border-cetlog-orange">
                         </div>
                     </div>
                 </div>
 
-                <!-- Botones Acción -->
                 <div class="pt-4 border-t border-cetlog-border flex justify-end gap-2">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-cetlog-border rounded-lg text-cetlog-grayText hover:bg-slate-50 font-bold">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-cetlog-orange hover:bg-cetlog-orangeHover text-white font-bold rounded-lg transition-colors shadow-sm">
-                        Guardar Webinar
-                    </button>
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-cetlog-surface hover:bg-slate-200 text-cetlog-blue font-bold rounded-lg text-xs transition-colors">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-cetlog-orange hover:bg-cetlog-orangeHover text-white font-bold rounded-lg text-xs transition-colors shadow-sm">Guardar Webinar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 7. LÓGICA JAVASCRIPT CONSERVA TODA LA FUNCIONALIDAD -->
+    <!-- 7. LÓGICA JAVASCRIPT CON SINCRONIZACIÓN CLOUD Y FORMATOS -->
     <script>
-        // ESTADO GLOBAL
-        const STORAGE_KEY = 'cetlog_webinars_data_v4';
+        const JSONBIN_BIN_ID = "6af4a293ffd5d16053b9edfb";
+        const JSONBIN_MASTER_KEY = "$2a$10$wV.adj28KIOXYBNm3wzQ4eUtquTbe1VD8Riihu1XU8hLZ4MuLnzQy";
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
         let webinars = [];
-        let currentSort = { field: 'date', order: 'desc' };
+        let currentSort = { field: 'date', direction: 'desc' };
+        let activeDetailId = null;
 
-        // REGISTROS DEMO CON FOTOGRAFÍAS Y FALLBACKS
-        const demoWebinars = [
-            {
-                id: '1',
-                title: 'Optimización de Almacenes e Inventarios 2026',
-                date: '2026-03-15',
-                status: 'Programado',
-                instructor: 'Ing. Roberto Gómez',
-                instructorPhoto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-                host: 'María Fernández',
-                hostPhoto: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-                presentationUrl: 'https://drive.google.com',
-                zoomUrl: 'https://zoom.us/j/1234567890',
-                sheetUrl: '',
-                registered: 340,
-                attended: 0,
-                certificates: 0,
-                isDemo: true
-            },
-            {
-                id: '2',
-                title: 'KPIs Clave en Gestión Logística y Cadena de Suministro',
-                date: '2026-02-20',
-                status: 'Realizado',
-                instructor: 'Lic. Javier Peralta',
-                instructorPhoto: '',
-                host: 'Ana María Torres',
-                hostPhoto: '',
-                presentationUrl: 'https://drive.google.com',
-                zoomUrl: '',
-                sheetUrl: '',
-                registered: 512,
-                attended: 310,
-                certificates: 128,
-                isDemo: true
-            }
-        ];
-
-        // INICIALIZACIÓN
-        window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            autoSyncAllWebinars();
-            renderDashboard();
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchCloudData();
         });
 
-        function loadData() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try {
-                    webinars = JSON.parse(stored);
-                } catch (e) {
-                    webinars = demoWebinars;
+        async function fetchCloudData() {
+            updateSyncStatus('Sincronizando...', 'text-amber-600', 'ph-arrows-clockwise animate-spin');
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'GET',
+                    headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+                });
+                
+                if (!response.ok) throw new Error('Error al conectar con JSONBin');
+                const result = await response.json();
+                
+                if (Array.isArray(result.record)) {
+                    webinars = result.record;
+                    localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
                 }
-            } else {
-                webinars = demoWebinars;
-                saveData();
+                updateSyncStatus('Nube Sincronizada', 'text-emerald-600', 'ph-cloud-check');
+            } catch (err) {
+                console.warn('Error cloud, usando almacenamiento local:', err);
+                const local = localStorage.getItem('cetlog_webinars');
+                webinars = local ? JSON.parse(local) : [];
+                updateSyncStatus('Modo Local', 'text-slate-500', 'ph-hard-drive');
+            }
+            applyFilters();
+        }
+
+        async function saveCloudData() {
+            updateSyncStatus('Guardando...', 'text-amber-600', 'ph-arrows-clockwise animate-spin');
+            localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_MASTER_KEY
+                    },
+                    body: JSON.stringify(webinars)
+                });
+                if (!response.ok) throw new Error('Error guardando en la nube');
+                updateSyncStatus('Nube Sincronizada', 'text-emerald-600', 'ph-cloud-check');
+            } catch (err) {
+                console.error('Error al guardar en la nube:', err);
+                updateSyncStatus('Error de Guardado', 'text-red-500', 'ph-warning');
             }
         }
 
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(webinars));
-        }
-
-        // CONTROL DE FILTROS EN MÓVIL
-        function toggleFilterMobile() {
-            const container = document.getElementById('filter-container');
-            container.classList.toggle('hidden');
-            container.classList.toggle('flex');
-        }
-
-        // FUNCIONES DE FILTRADO Y ORDENAMIENTO
-        function sortBy(field) {
-            if (currentSort.field === field) {
-                currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSort.field = field;
-                currentSort.order = 'desc';
+        function updateSyncStatus(text, textColorClass, iconClass) {
+            const statusEl = document.getElementById('sync-status');
+            if (statusEl) {
+                statusEl.className = `text-[11px] font-semibold flex items-center gap-1 ${textColorClass}`;
+                statusEl.innerHTML = `<i class="ph-bold ${iconClass} text-sm"></i> ${text}`;
             }
-            renderDashboard();
+        }
+
+        function getAvatarHTML(name, photoUrl, roleColorClass = 'bg-cetlog-blue') {
+            if (photoUrl && photoUrl.trim() !== '') {
+                return `<img src="${photoUrl}" alt="${name}" class="w-8 h-8 rounded-full object-cover border border-slate-200" onerror="this.onerror=null; this.parentElement.innerHTML='${getInitialsAvatar(name, roleColorClass)}';">`;
+            }
+            return getInitialsAvatar(name, roleColorClass);
+        }
+
+        function getInitialsAvatar(name, roleColorClass) {
+            if (!name || name.trim() === '') return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs"><i class="ph-bold ph-user"></i></div>`;
+            const initials = name.trim().split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            return `<div class="w-8 h-8 rounded-full ${roleColorClass} text-white flex items-center justify-center font-bold text-xs tracking-tighter">${initials}</div>`;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            const date = new Date(parts[0], parts[1] - 1, parts[2]);
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            return `${date.getDate().toString().padStart(2, '0')} ${months[date.getMonth()]} ${date.getFullYear()}`;
         }
 
         function applyFilters() {
-            renderDashboard();
-        }
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const year = document.getElementById('filter-year').value;
+            const month = document.getElementById('filter-month').value;
+            const status = document.getElementById('filter-status').value;
 
-        function resetFilters() {
-            document.getElementById('filter-search').value = '';
-            document.getElementById('filter-year').value = 'ALL';
-            document.getElementById('filter-month').value = 'ALL';
-            document.getElementById('filter-status').value = 'ALL';
-            renderDashboard();
-        }
+            let filtered = webinars.filter(w => {
+                const matchesSearch = !search || 
+                    (w.title && w.title.toLowerCase().includes(search)) ||
+                    (w.instructor && w.instructor.toLowerCase().includes(search)) ||
+                    (w.host && w.host.toLowerCase().includes(search));
 
-        function getFilteredWebinars() {
-            const searchValue = document.getElementById('filter-search').value.toLowerCase().trim();
-            const yearValue = document.getElementById('filter-year').value;
-            const monthValue = document.getElementById('filter-month').value;
-            const statusValue = document.getElementById('filter-status').value;
+                const dateObj = w.date ? new Date(w.date + 'T00:00:00') : null;
+                const matchesYear = year === 'ALL' || (dateObj && dateObj.getFullYear().toString() === year);
+                const matchesMonth = month === 'ALL' || (dateObj && dateObj.getMonth().toString() === month);
+                const matchesStatus = status === 'ALL' || w.status === status;
 
-            return webinars.filter(item => {
-                const matchSearch = !searchValue || 
-                    (item.title && item.title.toLowerCase().includes(searchValue)) ||
-                    (item.instructor && item.instructor.toLowerCase().includes(searchValue)) ||
-                    (item.host && item.host.toLowerCase().includes(searchValue));
+                return matchesSearch && matchesYear && matchesMonth && matchesStatus;
+            });
 
-                let matchYear = true;
-                let matchMonth = true;
-                if (item.date) {
-                    const parts = item.date.split('-');
-                    if (parts.length === 3) {
-                        const itemYear = parts[0];
-                        const itemMonth = (parseInt(parts[1]) - 1).toString();
-                        if (yearValue !== 'ALL') matchYear = (itemYear === yearValue);
-                        if (monthValue !== 'ALL') matchMonth = (itemMonth === monthValue);
-                    }
+            filtered.sort((a, b) => {
+                let valA = a[currentSort.field] || '';
+                let valB = b[currentSort.field] || '';
+                if (typeof valA === 'number') {
+                    return currentSort.direction === 'asc' ? valA - valB : valB - valA;
                 }
-
-                const matchStatus = (statusValue === 'ALL') || (item.status === statusValue);
-                return matchSearch && matchYear && matchMonth && matchStatus;
+                return currentSort.direction === 'asc' 
+                    ? String(valA).localeCompare(String(valB)) 
+                    : String(valB).localeCompare(String(valA));
             });
+
+            renderDashboard(filtered);
         }
 
-        function sortWebinarsList(list) {
-            const field = currentSort.field;
-            const order = currentSort.order === 'asc' ? 1 : -1;
-
-            list.sort((a, b) => {
-                let valA = a[field] ?? '';
-                let valB = b[field] ?? '';
-                if (typeof valA === 'string') valA = valA.toLowerCase();
-                if (typeof valB === 'string') valB = valB.toLowerCase();
-                if (valA < valB) return -1 * order;
-                if (valA > valB) return 1 * order;
-                return 0;
-            });
-        }
-
-        // SINCRONIZACIÓN PRIVADA GOOGLE SHEETS APPS SCRIPT
-        async function autoSyncAllWebinars() {
-            let updated = false;
-            for (let item of webinars) {
-                if (item.sheetUrl) {
-                    try {
-                        const res = await fetch(item.sheetUrl, { redirect: 'follow' });
-                        const data = await res.json();
-                        const count = data.count !== undefined ? data.count : (data.total !== undefined ? data.total : null);
-                        if (count !== null && item.registered !== count) {
-                            item.registered = count;
-                            updated = true;
-                        }
-                    } catch (e) {
-                        // Silencioso en auto-sync
-                    }
-                }
-            }
-            if (updated) {
-                saveData();
-                renderDashboard();
-            }
-        }
-
-        // RENDERIZADO GLOBAL
-        function renderDashboard() {
-            const filtered = getFilteredWebinars();
-            sortWebinarsList(filtered);
+        function renderDashboard(data) {
+            document.getElementById('record-count').innerText = `${data.length} eventos`;
             
-            updateKPIs(filtered);
-            renderDesktopTable(filtered);
-            renderMobileCards(filtered);
-            
-            document.getElementById('record-count').innerText = `${filtered.length} eventos`;
+            const totalScheduled = webinars.filter(w => w.status === 'Programado').length;
+            const totalReg = data.reduce((sum, w) => sum + (Number(w.registered) || 0), 0);
+            const totalAtt = data.reduce((sum, w) => sum + (Number(w.attended) || 0), 0);
+            const totalCert = data.reduce((sum, w) => sum + (Number(w.certificates) || 0), 0);
 
-            const emptyState = document.getElementById('empty-state');
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-            }
-        }
+            document.getElementById('kpi-total').innerText = totalScheduled;
+            document.getElementById('kpi-registered').innerText = totalReg;
+            document.getElementById('kpi-attended').innerText = totalAtt;
+            document.getElementById('kpi-certificates').innerText = totalCert;
 
-        // CÁLCULO DE KPIS
-        function updateKPIs(data) {
-            const total = data.length;
-            const registered = data.reduce((acc, curr) => acc + Number(curr.registered || 0), 0);
-            const attended = data.reduce((acc, curr) => acc + Number(curr.attended || 0), 0);
-            const certificates = data.reduce((acc, curr) => acc + Number(curr.certificates || 0), 0);
-
-            document.getElementById('kpi-total').innerText = total;
-            document.getElementById('kpi-registered').innerText = registered.toLocaleString();
-            document.getElementById('kpi-attended').innerText = attended.toLocaleString();
-            document.getElementById('kpi-certificates').innerText = certificates.toLocaleString();
-        }
-
-        // RENDER VISTA MÓVIL (TARJETAS COMPACTAS)
-        function renderMobileCards(data) {
-            const container = document.getElementById('mobile-cards-container');
-            container.innerHTML = '';
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'bg-white p-3.5 rounded-xl border border-cetlog-border shadow-sm space-y-3 active:scale-[0.99] transition-transform';
-                card.onclick = () => openDetail(item.id);
-
-                const statusBadge = getStatusBadgeHTML(item.status);
-                const instructorAvatar = getAvatarHTML(item.instructor, item.instructorPhoto, 'w-6 h-6 text-[9px]');
-
-                card.innerHTML = `
-                    <div class="flex items-start justify-between gap-2">
-                        <div class="space-y-1">
-                            ${statusBadge}
-                            <h4 class="text-xs font-bold text-cetlog-blue leading-snug mt-1">${escapeHtml(item.title)}</h4>
-                        </div>
-                        <i class="ph-bold ph-caret-right text-slate-300 text-sm shrink-0"></i>
-                    </div>
-
-                    <div class="flex items-center justify-between text-[11px] text-cetlog-grayText pt-1 border-t border-slate-100">
-                        <span class="font-medium flex items-center gap-1">
-                            <i class="ph-bold ph-calendar"></i> ${formatDate(item.date)}
-                        </span>
-                        <div class="flex items-center gap-1">
-                            ${instructorAvatar}
-                            <span class="text-[11px] font-semibold text-cetlog-blue truncate max-w-[110px]">${escapeHtml(item.instructor || 'CETLOG')}</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-1.5 bg-cetlog-surface p-2 rounded-lg text-center text-[10px]">
-                        <div>
-                            <span class="text-cetlog-grayText font-semibold block">Inscritos</span>
-                            <span class="font-extrabold text-cetlog-blue text-xs">${Number(item.registered || 0).toLocaleString()}</span>
-                        </div>
-                        <div>
-                            <span class="text-blue-700 font-semibold block">Zoom</span>
-                            <span class="font-extrabold text-blue-600 text-xs">${Number(item.attended || 0).toLocaleString()}</span>
-                        </div>
-                        <div>
-                            <span class="text-cetlog-orange font-semibold block">Certif.</span>
-                            <span class="font-extrabold text-cetlog-orange text-xs">${Number(item.certificates || 0).toLocaleString()}</span>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // RENDER VISTA ESCRITORIO (TABLA LIMPIA)
-        function renderDesktopTable(data) {
             const tbody = document.getElementById('summary-table-body');
+            const mobileContainer = document.getElementById('mobile-cards-container');
+            const emptyState = document.getElementById('empty-state');
+
             tbody.innerHTML = '';
+            mobileContainer.innerHTML = '';
 
-            data.forEach(item => {
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            data.forEach(w => {
+                let badgeClass = 'bg-cetlog-statusBlueBg text-cetlog-statusBlueText';
+                if (w.status === 'Realizado') badgeClass = 'bg-cetlog-statusGreenBg text-cetlog-statusGreenText';
+                if (w.status === 'Cancelado') badgeClass = 'bg-cetlog-statusRedBg text-cetlog-statusRedText';
+
+                // Render Escritorio (Tabla)
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-cetlog-surface transition-colors cursor-pointer border-b border-slate-100';
-                tr.onclick = (e) => {
-                    if (e.target.closest('.action-btn')) return;
-                    openDetail(item.id);
-                };
-
-                const formattedDate = formatDate(item.date);
-                const demoBadge = item.isDemo ? `<span class="ml-1 text-[9px] bg-amber-100 text-amber-800 font-bold px-1 rounded">DEMO</span>` : '';
-                const instructorAvatar = getAvatarHTML(item.instructor, item.instructorPhoto, 'w-6 h-6 text-[9px]');
-                const statusBadge = getStatusBadgeHTML(item.status);
-
+                tr.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
                 tr.innerHTML = `
-                    <td class="py-3 px-5 font-semibold text-cetlog-blue">
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2">
-                                ${statusBadge}
-                                <span>${escapeHtml(item.title)}</span>
-                                ${demoBadge}
-                            </div>
-                            <div class="flex items-center gap-1.5 text-[11px] text-cetlog-grayText font-normal">
-                                ${instructorAvatar}
-                                <span>${escapeHtml(item.instructor || 'Instructor por asignar')}</span>
+                    <td class="py-3 px-5">
+                        <div class="flex items-center space-x-3">
+                            ${getAvatarHTML(w.instructor, w.instructorPhoto, 'bg-cetlog-blue')}
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-2 h-2 rounded-full ${w.status === 'Realizado' ? 'bg-emerald-500' : 'bg-blue-500'}"></span>
+                                    <span class="font-bold text-cetlog-blue hover:text-cetlog-orange cursor-pointer" onclick="openDetail('${w.id}')">${w.title}</span>
+                                </div>
+                                <p class="text-[11px] text-cetlog-grayText mt-0.5">${w.instructor || 'Sin instructor'}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="py-3 px-5 text-cetlog-grayText font-medium whitespace-nowrap">${formattedDate}</td>
-                    <td class="py-3 px-5 text-right font-bold text-cetlog-blue">${Number(item.registered || 0).toLocaleString()}</td>
-                    <td class="py-3 px-5 text-right font-bold text-blue-600">${Number(item.attended || 0).toLocaleString()}</td>
-                    <td class="py-3 px-5 text-right font-bold text-cetlog-orange">${Number(item.certificates || 0).toLocaleString()}</td>
-                    <td class="py-3 px-4 text-center whitespace-nowrap">
-                        <button onclick="openDetail('${item.id}')" class="action-btn px-3 py-1.5 text-[11px] font-bold text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-slate-200 inline-flex items-center gap-1 transition-colors">
-                            Detalle <i class="ph-bold ph-caret-right text-xs"></i>
+                    <td class="py-3 px-5 font-semibold text-cetlog-grayText">${formatDate(w.date)}</td>
+                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-blue">${w.registered || 0}</td>
+                    <td class="py-3 px-5 text-right font-extrabold text-blue-600">${w.attended || 0}</td>
+                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface hover:bg-slate-200 text-cetlog-blue font-bold rounded text-[11px] border border-cetlog-border transition-colors">
+                            Detalle <i class="ph-bold ph-caret-right text-[10px]"></i>
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
+
+                // Render Mobile (Tarjetas)
+                const card = document.createElement('div');
+                card.className = "bg-white border border-cetlog-border rounded-xl p-3 space-y-2.5 shadow-sm";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase ${badgeClass}">${w.status}</span>
+                        <span class="text-[11px] font-semibold text-cetlog-grayText">${formatDate(w.date)}</span>
+                    </div>
+                    <h4 class="font-extrabold text-cetlog-blue text-xs leading-snug cursor-pointer" onclick="openDetail('${w.id}')">${w.title}</h4>
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-100">
+                        <div class="flex items-center space-x-2">
+                            ${getAvatarHTML(w.instructor, w.instructorPhoto, 'bg-cetlog-blue')}
+                            <span class="text-[11px] font-semibold text-cetlog-blue truncate max-w-[120px]">${w.instructor || 'Sin instructor'}</span>
+                        </div>
+                        <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface text-cetlog-blue font-bold rounded text-[10px] border border-cetlog-border">
+                            Ver Detalle
+                        </button>
+                    </div>
+                `;
+                mobileContainer.appendChild(card);
             });
         }
 
-        // DETALLE INDIVIDUAL EN PANEL LATERAL (DRAWER)
         function openDetail(id) {
-            const item = webinars.find(w => w.id === id);
-            if (!item) return;
+            const w = webinars.find(item => String(item.id) === String(id));
+            if (!w) return;
 
-            document.getElementById('detail-title').innerText = item.title;
-            document.getElementById('detail-date').innerText = formatDate(item.date);
-            
-            // Badge Estado
-            const badgeElem = document.getElementById('detail-status-badge');
-            badgeElem.className = 'text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ';
-            if (item.status === 'Programado') badgeElem.className += 'bg-cetlog-statusBlueBg text-cetlog-statusBlueText';
-            else if (item.status === 'Realizado') badgeElem.className += 'bg-cetlog-statusGreenBg text-cetlog-statusGreenText';
-            else badgeElem.className += 'bg-cetlog-statusRedBg text-cetlog-statusRedText';
-            badgeElem.innerText = item.status;
+            activeDetailId = w.id;
+            document.getElementById('detail-title').innerText = w.title;
+            document.getElementById('detail-date').innerText = formatDate(w.date);
 
-            // Enlace Presentación
+            const badge = document.getElementById('detail-status-badge');
+            badge.innerText = w.status;
+            badge.className = `text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                w.status === 'Realizado' ? 'bg-cetlog-statusGreenBg text-cetlog-statusGreenText' : 
+                w.status === 'Cancelado' ? 'bg-cetlog-statusRedBg text-cetlog-statusRedText' : 'bg-cetlog-statusBlueBg text-cetlog-statusBlueText'
+            }`;
+
+            document.getElementById('detail-instructor-avatar-container').innerHTML = getAvatarHTML(w.instructor, w.instructorPhoto, 'bg-cetlog-orange');
+            document.getElementById('detail-instructor-name').innerText = w.instructor || 'No asignado';
+
+            document.getElementById('detail-host-avatar-container').innerHTML = getAvatarHTML(w.host, w.hostPhoto, 'bg-blue-600');
+            document.getElementById('detail-host-name').innerText = w.host || 'No asignado';
+
+            document.getElementById('detail-count-registered').innerText = w.registered || 0;
+            document.getElementById('detail-count-attended').innerText = w.attended || 0;
+            document.getElementById('detail-count-certificates').innerText = w.certificates || 0;
+
+            const reg = Number(w.registered) || 0;
+            const attPct = reg > 0 ? Math.round(((Number(w.attended) || 0) / reg) * 100) : 0;
+            const certPct = reg > 0 ? Math.round(((Number(w.certificates) || 0) / reg) * 100) : 0;
+
+            document.getElementById('detail-pct-attendance').innerText = `${attPct}%`;
+            document.getElementById('bar-attendance').style.width = `${Math.min(attPct, 100)}%`;
+            document.getElementById('detail-pct-certificates').innerText = `${certPct}%`;
+            document.getElementById('bar-certificates').style.width = `${Math.min(certPct, 100)}%`;
+
             const linkContainer = document.getElementById('detail-link-container');
-            if (item.presentationUrl) {
-                linkContainer.innerHTML = `<a href="${escapeHtml(item.presentationUrl)}" target="_blank" class="text-cetlog-orange font-bold hover:underline flex items-center gap-1"><i class="ph-bold ph-arrow-square-out"></i> Abrir Material</a>`;
+            if (w.presentationUrl && w.presentationUrl.trim() !== '') {
+                linkContainer.innerHTML = `<a href="${w.presentationUrl}" target="_blank" rel="noopener" class="text-cetlog-orange hover:underline font-bold text-xs flex items-center gap-1"><i class="ph-bold ph-arrow-square-out"></i> Abrir Material</a>`;
             } else {
-                linkContainer.innerHTML = `<span class="text-slate-400 font-medium">Sin enlace</span>`;
+                linkContainer.innerHTML = `<span class="text-slate-400 font-medium">No disponible</span>`;
             }
 
-            // Enlace/Botón Sala Zoom (Para Cohost)
             const zoomContainer = document.getElementById('detail-zoom-container');
-            if (item.zoomUrl) {
+            if (w.zoomUrl && w.zoomUrl.trim() !== '') {
                 zoomContainer.innerHTML = `
-                    <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                        <a href="${escapeHtml(item.zoomUrl)}" target="_blank" class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs transition-colors shadow-sm gap-2">
-                            <i class="ph-bold ph-video-camera text-base"></i>
-                            <span>Ingresar a Sala Zoom</span>
+                    <div class="flex items-center gap-2 mt-1">
+                        <a href="${w.zoomUrl}" target="_blank" rel="noopener" class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs text-center transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="ph-bold ph-video-camera"></i> Ingresar a Sala Zoom
                         </a>
-                        <button onclick="copyToClipboard('${escapeHtml(item.zoomUrl)}')" class="px-3 py-2 bg-white border border-blue-200 hover:bg-blue-50 text-blue-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1 shrink-0">
-                            <i class="ph-bold ph-copy text-sm"></i>
-                            <span>Copiar Enlace</span>
+                        <button onclick="copyZoomLink('${w.zoomUrl}')" class="px-3 py-2 bg-white border border-blue-200 text-blue-700 font-bold rounded-lg text-xs hover:bg-blue-50 transition-colors flex items-center gap-1">
+                            <i class="ph-bold ph-copy"></i> Copiar Enlace
                         </button>
                     </div>
                 `;
             } else {
-                zoomContainer.innerHTML = `<p class="text-slate-400 font-medium text-[11px] italic">No se ha registrado una URL de Zoom para este evento.</p>`;
+                zoomContainer.innerHTML = `<p class="text-xs text-slate-400 font-medium">No se ha registrado enlace de Zoom.</p>`;
             }
 
-            // Fotos y Equipo Responsable
-            document.getElementById('detail-instructor-name').innerText = item.instructor || 'No asignado';
-            document.getElementById('detail-instructor-avatar-container').innerHTML = getAvatarHTML(item.instructor, item.instructorPhoto, 'w-10 h-10 text-xs');
-
-            document.getElementById('detail-host-name').innerText = item.host || 'No asignado';
-            document.getElementById('detail-host-avatar-container').innerHTML = getAvatarHTML(item.host, item.hostPhoto, 'w-10 h-10 text-xs');
-
-            // Métricas
-            const reg = Number(item.registered || 0);
-            const att = Number(item.attended || 0);
-            const cert = Number(item.certificates || 0);
-
-            document.getElementById('detail-count-registered').innerText = reg.toLocaleString();
-            document.getElementById('detail-count-attended').innerText = att.toLocaleString();
-            document.getElementById('detail-count-certificates').innerText = cert.toLocaleString();
-
-            // Porcentajes & Barras
-            const pctAtt = reg > 0 ? Math.round((att / reg) * 100) : 0;
-            const pctCert = reg > 0 ? Math.round((cert / reg) * 100) : 0;
-
-            document.getElementById('detail-pct-attendance').innerText = `${pctAtt}%`;
-            document.getElementById('bar-attendance').style.width = `${Math.min(pctAtt, 100)}%`;
-
-            document.getElementById('detail-pct-certificates').innerText = `${pctCert}%`;
-            document.getElementById('bar-certificates').style.width = `${Math.min(pctCert, 100)}%`;
-
-            // Status Google Sheets
-            document.getElementById('detail-sheet-status').innerHTML = item.sheetUrl 
-                ? `<span class="text-emerald-600 font-semibold flex items-center gap-1"><i class="ph-bold ph-check-circle"></i> URL vinculada</span>` 
-                : `<span class="text-slate-400 font-medium">Carga manual únicamente</span>`;
-
-            // Botones Footer Drawer
-            document.getElementById('btn-edit-current').onclick = () => { closeDetail(); editWebinar(item.id); };
-            document.getElementById('btn-delete-current').onclick = () => { closeDetail(); deleteWebinar(item.id); };
+            document.getElementById('btn-edit-current').onclick = () => { closeDetail(); openModal(w.id); };
+            document.getElementById('btn-delete-current').onclick = () => deleteWebinar(w.id);
 
             document.getElementById('detail-drawer').classList.remove('hidden');
         }
 
         function closeDetail() {
             document.getElementById('detail-drawer').classList.add('hidden');
+            activeDetailId = null;
         }
 
-        // FORMULARIO CREAR / EDITAR WEBINAR
-        function openModal(isEdit = false) {
-            if (!isEdit) {
-                document.getElementById('webinar-form').reset();
+        function copyZoomLink(url) {
+            navigator.clipboard.writeText(url);
+            alert('¡Enlace de Zoom copiado al portapapeles!');
+        }
+
+        function openModal(id = null) {
+            const form = document.getElementById('webinar-form');
+            form.reset();
+            
+            if (id) {
+                const w = webinars.find(item => String(item.id) === String(id));
+                if (w) {
+                    document.getElementById('modal-title').innerText = 'Editar Webinar';
+                    document.getElementById('form-id').value = w.id;
+                    document.getElementById('form-title').value = w.title;
+                    document.getElementById('form-date').value = w.date;
+                    document.getElementById('form-status').value = w.status;
+                    document.getElementById('form-instructor').value = w.instructor || '';
+                    document.getElementById('form-instructor-photo').value = w.instructorPhoto || '';
+                    document.getElementById('form-host').value = w.host || '';
+                    document.getElementById('form-host-photo').value = w.hostPhoto || '';
+                    document.getElementById('form-presentation').value = w.presentationUrl || '';
+                    document.getElementById('form-zoom-url').value = w.zoomUrl || '';
+                    document.getElementById('form-sheet-url').value = w.sheetUrl || '';
+                    document.getElementById('form-registered').value = w.registered || 0;
+                    document.getElementById('form-attended').value = w.attended || 0;
+                    document.getElementById('form-certificates').value = w.certificates || 0;
+                }
+            } else {
+                document.getElementById('modal-title').innerText = 'Registrar Nuevo Webinar';
                 document.getElementById('form-id').value = '';
-                document.getElementById('modal-title').innerHTML = `<i class="ph-bold ph-plus-circle text-cetlog-orange text-base"></i> Registrar Nuevo Webinar`;
+                document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
             }
             document.getElementById('modal-form').classList.remove('hidden');
         }
@@ -954,34 +809,10 @@
             document.getElementById('modal-form').classList.add('hidden');
         }
 
-        function editWebinar(id) {
-            const item = webinars.find(w => w.id === id);
-            if (!item) return;
-
-            document.getElementById('form-id').value = item.id;
-            document.getElementById('form-title').value = item.title;
-            document.getElementById('form-date').value = item.date;
-            document.getElementById('form-status').value = item.status;
-            document.getElementById('form-instructor').value = item.instructor || '';
-            document.getElementById('form-instructor-photo').value = item.instructorPhoto || '';
-            document.getElementById('form-host').value = item.host || '';
-            document.getElementById('form-host-photo').value = item.hostPhoto || '';
-            document.getElementById('form-presentation').value = item.presentationUrl || '';
-            document.getElementById('form-zoom-url').value = item.zoomUrl || '';
-            document.getElementById('form-sheet-url').value = item.sheetUrl || '';
-            document.getElementById('form-registered').value = item.registered || 0;
-            document.getElementById('form-attended').value = item.attended || 0;
-            document.getElementById('form-certificates').value = item.certificates || 0;
-
-            document.getElementById('modal-title').innerHTML = `<i class="ph-bold ph-pencil-line text-cetlog-orange text-base"></i> Editar Webinar`;
-            openModal(true);
-        }
-
-        function saveWebinar(event) {
+        async function saveWebinar(event) {
             event.preventDefault();
-            
             const id = document.getElementById('form-id').value;
-            const data = {
+            const webinarData = {
                 id: id || Date.now().toString(),
                 title: document.getElementById('form-title').value.trim(),
                 date: document.getElementById('form-date').value,
@@ -993,129 +824,52 @@
                 presentationUrl: document.getElementById('form-presentation').value.trim(),
                 zoomUrl: document.getElementById('form-zoom-url').value.trim(),
                 sheetUrl: document.getElementById('form-sheet-url').value.trim(),
-                registered: parseInt(document.getElementById('form-registered').value) || 0,
-                attended: parseInt(document.getElementById('form-attended').value) || 0,
-                certificates: parseInt(document.getElementById('form-certificates').value) || 0,
-                isDemo: false
+                registered: Number(document.getElementById('form-registered').value) || 0,
+                attended: Number(document.getElementById('form-attended').value) || 0,
+                certificates: Number(document.getElementById('form-certificates').value) || 0
             };
 
             if (id) {
-                const index = webinars.findIndex(w => w.id === id);
-                if (index !== -1) webinars[index] = data;
+                const idx = webinars.findIndex(w => String(w.id) === String(id));
+                if (idx !== -1) webinars[idx] = webinarData;
             } else {
-                webinars.unshift(data);
+                webinars.push(webinarData);
             }
 
-            saveData();
             closeModal();
-            renderDashboard();
+            applyFilters();
+            await saveCloudData();
         }
 
-        function deleteWebinar(id) {
-            const item = webinars.find(w => w.id === id);
-            if (!item) return;
-
-            if (confirm(`¿Está seguro de eliminar el webinar "${item.title}"? Esta acción no se puede deshacer.`)) {
-                webinars = webinars.filter(w => w.id !== id);
-                saveData();
-                renderDashboard();
+        async function deleteWebinar(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este webinar?')) {
+                webinars = webinars.filter(w => String(w.id) !== String(id));
+                closeDetail();
+                applyFilters();
+                await saveCloudData();
             }
         }
 
-        // SINCRONIZACIÓN MANUAL INDIVIDUAL
-        async function syncSingleField(urlFieldProp, targetInputId) {
-            let url = document.getElementById('form-sheet-url').value.trim();
-
-            if (!url) {
-                alert('Por favor ingrese la URL de Apps Script.');
-                return;
-            }
-
-            try {
-                // CORRECCIÓN APLICADA AQUÍ: Se añadió { redirect: 'follow' }
-                const res = await fetch(url, { redirect: 'follow' });
-                const data = await res.json();
-                
-                if (data && (data.count !== undefined || data.total !== undefined)) {
-                    const count = data.count !== undefined ? data.count : data.total;
-                    document.getElementById(targetInputId).value = count;
-                    alert(`¡Inscritos actualizados exitosamente! Conteo obtenido: ${count}`);
-                } else {
-                    alert('No se obtuvo el parámetro "count". Verifica el código en Apps Script.');
-                }
-            } catch (err) {
-                alert('Error de conexión con la URL de Apps Script.\n\nPor favor verifica:\n1. Que en Apps Script hayas elegido "Quién tiene acceso: Cualquier persona" (Anyone).\n2. Que estés usando el enlace de la "Nueva implementación".');
-            }
-        }
-
-        // GENERADOR DE AVATARES E IMÁGENES CON INICIALES FALLBACK
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('¡Enlace de Zoom copiado al portapapeles!');
-                });
+        function sortBy(field) {
+            if (currentSort.field === field) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    alert('¡Enlace de Zoom copiado al portapapeles!');
-                } catch (err) {
-                    alert('No se pudo copiar automáticamente. Copia el enlace manualmente: ' + text);
-                }
-                document.body.removeChild(textArea);
+                currentSort.field = field;
+                currentSort.direction = 'asc';
             }
+            applyFilters();
         }
 
-        // FUNCIONES DE UTILIDAD
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            const parts = dateStr.split('-');
-            if (parts.length !== 3) return dateStr;
-            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            return `${parts[2]} ${months[parseInt(parts[1]) - 1]} ${parts[0]}`;
+        function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-year').value = 'ALL';
+            document.getElementById('filter-month').value = 'ALL';
+            document.getElementById('filter-status').value = 'ALL';
+            applyFilters();
         }
 
-        function getAvatarHTML(name, photoUrl, sizeClasses = 'w-8 h-8 text-xs') {
-            if (photoUrl && photoUrl.trim() !== '') {
-                return `
-                    <img src="${escapeHtml(photoUrl)}" 
-                         alt="${escapeHtml(name || 'Equipo')}" 
-                         class="${sizeClasses} rounded-full object-cover border border-slate-200 shrink-0 shadow-sm"
-                         onerror="this.onerror=null; this.parentElement.innerHTML=getAvatarHTML('${escapeHtml(name || '')}', '', '${sizeClasses}');">
-                `;
-            }
-
-            const cleanName = (name || 'C').trim();
-            const words = cleanName.split(' ').filter(w => w.length > 0);
-            let initials = 'C';
-            if (words.length >= 2) {
-                initials = (words[0][0] + words[1][0]).toUpperCase();
-            } else if (words.length === 1 && words[0].length > 0) {
-                initials = words[0][0].toUpperCase();
-            }
-
-            return `
-                <div class="${sizeClasses} rounded-full bg-cetlog-blue text-white font-bold flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
-                    ${initials}
-                </div>
-            `;
-        }
-
-        function getStatusBadgeHTML(status) {
-            if (status === 'Programado') {
-                return `<span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-cetlog-statusBlueBg text-cetlog-statusBlueText"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 mr-1"></span> Programado</span>`;
-            } else if (status === 'Realizado') {
-                return `<span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-cetlog-statusGreenBg text-cetlog-statusGreenText"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-1"></span> Realizado</span>`;
-            } else {
-                return `<span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-cetlog-statusRedBg text-cetlog-statusRedText"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-1"></span> Cancelado</span>`;
-            }
-        }
-
-        function escapeHtml(str) {
-            return (str || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        function toggleFilterMobile() {
+            document.getElementById('filter-container').classList.toggle('hidden');
         }
     </script>
 </body>
