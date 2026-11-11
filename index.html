@@ -498,7 +498,7 @@
         </div>
     </div>
 
-    <!-- 7. LÓGICA JAVASCRIPT CON CORRECCIÓN DE AVATAR Y FETCH DE INSCRITOS -->
+<!-- 7. LÓGICA JAVASCRIPT CON CORRECCIÓN ROBUSTA DE AVATAR Y FETCH DE INSCRITOS -->
     <script>
         const JSONBIN_BIN_ID = "6af4a293ffd5d16053b9edfb";
         const JSONBIN_MASTER_KEY = "$2a$10$wV.adj28KIOXYBNm3wzQ4eUtquTbe1VD8Riihu1XU8hLZ4MuLnzQy";
@@ -589,21 +589,30 @@
             }
         }
 
+        /* --- CORRECCIÓN DEFINITIVA DE MANEJO DE AVATARES E INICIALES --- */
         function getInitialsAvatar(name, roleColorClass = 'bg-cetlog-blue') {
             if (!name || name.trim() === '') {
-                return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs"><i class="ph-bold ph-user"></i></div>`;
+                return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs shrink-0"><i class="ph-bold ph-user"></i></div>`;
             }
             const initials = name.trim().split(' ').filter(p => p.length > 0).map(n => n[0]).join('').substring(0, 2).toUpperCase();
             return `<div class="w-8 h-8 rounded-full ${roleColorClass} text-white flex items-center justify-center font-bold text-xs tracking-tighter shrink-0">${initials}</div>`;
         }
 
         function getAvatarHTML(name, photoUrl, roleColorClass = 'bg-cetlog-blue') {
-            if (photoUrl && photoUrl.trim() !== '') {
-                const cleanName = name ? name.replace(/'/g, "\\'") : '';
-                return `<img src="${photoUrl.trim()}" alt="${cleanName}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" onerror="this.outerHTML = \`${getInitialsAvatar(name, roleColorClass)}\`;">`;
+            if (!photoUrl || photoUrl.trim() === '') {
+                return getInitialsAvatar(name, roleColorClass);
             }
-            return getInitialsAvatar(name, roleColorClass);
+            const cleanUrl = photoUrl.trim().replace(/"/g, '&quot;');
+            const cleanName = name ? name.replace(/'/g, "\\'") : '';
+            return `<img src="${cleanUrl}" alt="Foto" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" onerror="handleAvatarError(this, '${cleanName}', '${roleColorClass}')">`;
         }
+
+        function handleAvatarError(imgElement, name, roleColorClass) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = getInitialsAvatar(name, roleColorClass);
+            imgElement.replaceWith(tempDiv.firstElementChild);
+        }
+        /* ----------------------------------------------------------------- */
 
         function formatDate(dateStr) {
             if (!dateStr) return '-';
@@ -698,7 +707,7 @@
                     <td class="py-3 px-5 font-semibold text-cetlog-grayText">${formatDate(w.date)}</td>
                     <td class="py-3 px-5 text-right font-extrabold text-cetlog-blue">${w.registered || 0}</td>
                     <td class="py-3 px-5 text-right font-extrabold text-blue-600">${w.attended || 0}</td>
-                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
                     <td class="py-3 px-4 text-center">
                         <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface hover:bg-slate-200 text-cetlog-blue font-bold rounded text-[11px] border border-cetlog-border transition-colors">
                             Detalle <i class="ph-bold ph-caret-right text-[10px]"></i>
@@ -751,7 +760,6 @@
             document.getElementById('detail-host-avatar-container').innerHTML = getAvatarHTML(w.host, w.hostPhoto, 'bg-blue-600');
             document.getElementById('detail-host-name').innerText = w.host || 'No asignado';
 
-            // Actualización instantánea del conteo de inscritos de Apps Script al abrir el detalle
             if (w.sheetUrl && w.sheetUrl.trim() !== '') {
                 document.getElementById('detail-sheet-status').innerHTML = `<span class="text-amber-600 flex items-center gap-1"><i class="ph-bold ph-arrows-clockwise animate-spin"></i> Consultando Sheets...</span>`;
                 try {
