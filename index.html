@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Tailwind CSS CDN con configuración corporativa CETLOG -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -79,8 +79,10 @@
                 </div>
 
                 <div class="flex items-center space-x-2 sm:space-x-3">
-                    <button onclick="fetchCloudData()" title="Sincronizar Datos" class="p-2 text-cetlog-blue bg-cetlog-surface rounded-lg border border-cetlog-border hover:bg-slate-100 transition-colors">
-                        <i class="ph-bold ph-arrows-clockwise text-base"></i>
+                    <!-- Botón de Actualización Manual -->
+                    <button onclick="fetchCloudData()" title="Actualizar Datos en Vivo" class="p-2 text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-cetlog-border transition-colors flex items-center gap-1.5 text-xs font-bold">
+                        <i class="ph-bold ph-arrows-clockwise text-sm text-cetlog-orange"></i>
+                        <span class="hidden md:inline">Actualizar</span>
                     </button>
 
                     <button onclick="toggleFilterMobile()" class="md:hidden p-2 text-cetlog-blue bg-cetlog-surface rounded-lg border border-cetlog-border">
@@ -496,7 +498,7 @@
         </div>
     </div>
 
-    <!-- 7. LÓGICA JAVASCRIPT CON SINCRONIZACIÓN CLOUD Y FORMATOS -->
+    <!-- 7. LÓGICA JAVASCRIPT CON CORRECCIÓN DE AVATAR Y FETCH DE INSCRITOS -->
     <script>
         const JSONBIN_BIN_ID = "6af4a293ffd5d16053b9edfb";
         const JSONBIN_MASTER_KEY = "$2a$10$wV.adj28KIOXYBNm3wzQ4eUtquTbe1VD8Riihu1XU8hLZ4MuLnzQy";
@@ -523,6 +525,7 @@
                 
                 if (Array.isArray(result.record)) {
                     webinars = result.record;
+                    await updateRegisteredCountsFromSheets();
                     localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
                 }
                 updateSyncStatus('Nube Sincronizada', 'text-emerald-600', 'ph-cloud-check');
@@ -533,6 +536,29 @@
                 updateSyncStatus('Modo Local', 'text-slate-500', 'ph-hard-drive');
             }
             applyFilters();
+        }
+
+        async function updateRegisteredCountsFromSheets() {
+            let updatedAny = false;
+            for (let w of webinars) {
+                if (w.sheetUrl && w.sheetUrl.trim() !== '') {
+                    try {
+                        const res = await fetch(w.sheetUrl.trim());
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && typeof data.count === 'number') {
+                                w.registered = data.count;
+                                updatedAny = true;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(`No se pudo actualizar inscritos para: ${w.title}`, e);
+                    }
+                }
+            }
+            if (updatedAny) {
+                await saveCloudData();
+            }
         }
 
         async function saveCloudData() {
@@ -563,17 +589,20 @@
             }
         }
 
-        function getAvatarHTML(name, photoUrl, roleColorClass = 'bg-cetlog-blue') {
-            if (photoUrl && photoUrl.trim() !== '') {
-                return `<img src="${photoUrl}" alt="${name}" class="w-8 h-8 rounded-full object-cover border border-slate-200" onerror="this.onerror=null; this.parentElement.innerHTML='${getInitialsAvatar(name, roleColorClass)}';">`;
+        function getInitialsAvatar(name, roleColorClass = 'bg-cetlog-blue') {
+            if (!name || name.trim() === '') {
+                return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs"><i class="ph-bold ph-user"></i></div>`;
             }
-            return getInitialsAvatar(name, roleColorClass);
+            const initials = name.trim().split(' ').filter(p => p.length > 0).map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            return `<div class="w-8 h-8 rounded-full ${roleColorClass} text-white flex items-center justify-center font-bold text-xs tracking-tighter shrink-0">${initials}</div>`;
         }
 
-        function getInitialsAvatar(name, roleColorClass) {
-            if (!name || name.trim() === '') return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs"><i class="ph-bold ph-user"></i></div>`;
-            const initials = name.trim().split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-            return `<div class="w-8 h-8 rounded-full ${roleColorClass} text-white flex items-center justify-center font-bold text-xs tracking-tighter">${initials}</div>`;
+        function getAvatarHTML(name, photoUrl, roleColorClass = 'bg-cetlog-blue') {
+            if (photoUrl && photoUrl.trim() !== '') {
+                const cleanName = name ? name.replace(/'/g, "\\'") : '';
+                return `<img src="${photoUrl.trim()}" alt="${cleanName}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" onerror="this.outerHTML = \`${getInitialsAvatar(name, roleColorClass)}\`;">`;
+            }
+            return getInitialsAvatar(name, roleColorClass);
         }
 
         function formatDate(dateStr) {
@@ -650,7 +679,7 @@
                 if (w.status === 'Realizado') badgeClass = 'bg-cetlog-statusGreenBg text-cetlog-statusGreenText';
                 if (w.status === 'Cancelado') badgeClass = 'bg-cetlog-statusRedBg text-cetlog-statusRedText';
 
-                // Render Escritorio (Tabla)
+                // Render Escritorio
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
                 tr.innerHTML = `
@@ -678,7 +707,7 @@
                 `;
                 tbody.appendChild(tr);
 
-                // Render Mobile (Tarjetas)
+                // Render Mobile
                 const card = document.createElement('div');
                 card.className = "bg-white border border-cetlog-border rounded-xl p-3 space-y-2.5 shadow-sm";
                 card.innerHTML = `
@@ -701,7 +730,7 @@
             });
         }
 
-        function openDetail(id) {
+        async function openDetail(id) {
             const w = webinars.find(item => String(item.id) === String(id));
             if (!w) return;
 
@@ -721,6 +750,27 @@
 
             document.getElementById('detail-host-avatar-container').innerHTML = getAvatarHTML(w.host, w.hostPhoto, 'bg-blue-600');
             document.getElementById('detail-host-name').innerText = w.host || 'No asignado';
+
+            // Actualización instantánea del conteo de inscritos de Apps Script al abrir el detalle
+            if (w.sheetUrl && w.sheetUrl.trim() !== '') {
+                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-amber-600 flex items-center gap-1"><i class="ph-bold ph-arrows-clockwise animate-spin"></i> Consultando Sheets...</span>`;
+                try {
+                    const res = await fetch(w.sheetUrl.trim());
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && typeof data.count === 'number') {
+                            w.registered = data.count;
+                            document.getElementById('detail-sheet-status').innerHTML = `<span class="text-emerald-600 flex items-center gap-1"><i class="ph-bold ph-check-circle"></i> Conectado (${data.count} inscritos)</span>`;
+                            applyFilters();
+                            saveCloudData();
+                        }
+                    }
+                } catch (e) {
+                    document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">URL Guardada</span>`;
+                }
+            } else {
+                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">Sin URL Vinculada</span>`;
+            }
 
             document.getElementById('detail-count-registered').innerText = w.registered || 0;
             document.getElementById('detail-count-attended').innerText = w.attended || 0;
