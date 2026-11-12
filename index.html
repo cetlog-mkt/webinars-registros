@@ -167,21 +167,27 @@
             </div>
         </section>
 
-        <!-- 3. BARRA DE FILTROS -->
+<!-- 3. BARRA DE FILTROS (DISEÑO MÓVIL REORGANIZADO) -->
         <section class="bg-white border border-cetlog-border rounded-xl p-3.5 shadow-sm space-y-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-cetlog-blue flex items-center gap-1.5">
-                        <i class="ph-bold ph-calendar-blank text-cetlog-orange"></i> Calendarización de Webinars
-                    </span>
-                    <span id="record-count" class="text-[10px] bg-cetlog-surface text-cetlog-blue font-semibold px-2 py-0.5 rounded-full border border-slate-200">0 eventos</span>
+            <div class="flex items-center justify-between gap-2">
+                <!-- Título Izquierda -->
+                <div class="flex items-center gap-1.5 min-w-0">
+                    <i class="ph-bold ph-calendar-blank text-cetlog-orange text-sm shrink-0"></i>
+                    <span class="text-xs font-bold text-cetlog-blue truncate">Calendarización</span>
                 </div>
 
-                <button onclick="toggleFilterMobile()" class="text-xs font-bold text-cetlog-orange md:hidden flex items-center gap-1">
-                    <i class="ph-bold ph-funnel"></i> Filtros
-                </button>
+                <!-- Contador + Botón Filtro Derecha -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <span id="record-count" class="text-[10px] bg-cetlog-surface text-cetlog-blue font-semibold px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap">0 eventos</span>
+                    
+                    <button onclick="toggleFilterMobile()" class="text-xs font-bold text-cetlog-orange md:hidden flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-50 border border-orange-100 active:scale-95 transition-transform">
+                        <i class="ph-bold ph-funnel text-xs"></i>
+                        <span>Filtros</span>
+                    </button>
+                </div>
             </div>
 
+            <!-- Contenedor Desplegable de Filtros -->
             <div id="filter-container" class="hidden md:flex flex-col md:flex-row gap-2.5 items-stretch md:items-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
                 <div class="relative flex-1">
                     <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
@@ -264,10 +270,10 @@
     <footer class="bg-white border-t border-cetlog-border py-4 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center text-[11px] text-cetlog-grayText flex flex-col sm:flex-row justify-between items-center gap-2">
             <div>
-                <strong class="text-cetlog-blue">CETLOG</strong> &copy; 2026 — Plataforma Privada de Gestión de Webinars
+                <strong class="text-cetlog-blue">CETLOG</strong> &copy; 2026 — Webinars
             </div>
             <div class="text-slate-400">
-                Sincronización en la Nube con JSONBin
+                Domina las funciones de tu próximo puesto laboral
             </div>
         </div>
     </footer>
