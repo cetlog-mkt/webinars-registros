@@ -523,8 +523,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchCloudData();
         });
+async function fetchCloudData() {
+            // 1. Carga inmediata desde memoria local si existe (0 segundos de espera visual)
+            const local = localStorage.getItem('cetlog_webinars');
+            if (local) {
+                webinars = JSON.parse(local);
+                applyFilters();
+            }
 
-        async function fetchCloudData() {
             updateSyncStatus('Sincronizando...', 'text-amber-600', 'ph-arrows-clockwise animate-spin');
             try {
                 const response = await fetch(JSONBIN_URL, {
@@ -537,42 +543,45 @@
                 
                 if (Array.isArray(result.record)) {
                     webinars = result.record;
-                    await updateRegisteredCountsFromSheets();
                     localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
+                    applyFilters(); // Muestra los datos de JSONBin de inmediato
+                    
+                    // 2. Consulta Google Sheets en paralelo sin bloquear la pantalla
+                    updateRegisteredCountsFromSheets();
                 }
                 updateSyncStatus('Nube Sincronizada', 'text-emerald-600', 'ph-cloud-check');
             } catch (err) {
                 console.warn('Error cloud, usando almacenamiento local:', err);
-                const local = localStorage.getItem('cetlog_webinars');
-                webinars = local ? JSON.parse(local) : [];
                 updateSyncStatus('Modo Local', 'text-slate-500', 'ph-hard-drive');
             }
-            applyFilters();
         }
 
         async function updateRegisteredCountsFromSheets() {
+            const webhooks = webinars.filter(w => w.sheetUrl && w.sheetUrl.trim() !== '');
+            if (webhooks.length === 0) return;
+
             let updatedAny = false;
-            for (let w of webinars) {
-                if (w.sheetUrl && w.sheetUrl.trim() !== '') {
-                    try {
-                        const res = await fetch(w.sheetUrl.trim());
-                        if (res.ok) {
-                            const data = await res.json();
-                            if (data && typeof data.count === 'number') {
-                                w.registered = data.count;
-                                updatedAny = true;
-                            }
+            // Ejecuta todas las consultas a Sheets al mismo tiempo (en paralelo)
+            await Promise.all(webhooks.map(async (w) => {
+                try {
+                    const res = await fetch(w.sheetUrl.trim());
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && typeof data.count === 'number' && data.count !== w.registered) {
+                            w.registered = data.count;
+                            updatedAny = true;
                         }
-                    } catch (e) {
-                        console.warn(`No se pudo actualizar inscritos para: ${w.title}`, e);
                     }
+                } catch (e) {
+                    console.warn(`No se pudo actualizar inscritos para: ${w.title}`, e);
                 }
-            }
+            }));
+
             if (updatedAny) {
+                applyFilters();
                 await saveCloudData();
             }
         }
-
         async function saveCloudData() {
             updateSyncStatus('Guardando...', 'text-amber-600', 'ph-arrows-clockwise animate-spin');
             localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
@@ -767,7 +776,7 @@
             });
         }
 
-        async function openDetail(id) {
+function openDetail(id) {
             const w = webinars.find(item => String(item.id) === String(id));
             if (!w) return;
 
@@ -788,38 +797,7 @@
             document.getElementById('detail-host-avatar-container').innerHTML = getAvatarHTML(w.host, w.hostPhoto, 'bg-blue-600');
             document.getElementById('detail-host-name').innerText = w.host || 'No asignado';
 
-            if (w.sheetUrl && w.sheetUrl.trim() !== '') {
-                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-amber-600 flex items-center gap-1"><i class="ph-bold ph-arrows-clockwise animate-spin"></i> Consultando Sheets...</span>`;
-                try {
-                    const res = await fetch(w.sheetUrl.trim());
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data && typeof data.count === 'number') {
-                            w.registered = data.count;
-                            document.getElementById('detail-sheet-status').innerHTML = `<span class="text-emerald-600 flex items-center gap-1"><i class="ph-bold ph-check-circle"></i> Conectado (${data.count} inscritos)</span>`;
-                            applyFilters();
-                            saveCloudData();
-                        }
-                    }
-                } catch (e) {
-                    document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">URL Guardada</span>`;
-                }
-            } else {
-                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">Sin URL Vinculada</span>`;
-            }
-
-            document.getElementById('detail-count-registered').innerText = w.registered || 0;
-            document.getElementById('detail-count-attended').innerText = w.attended || 0;
-            document.getElementById('detail-count-certificates').innerText = w.certificates || 0;
-
-            const reg = Number(w.registered) || 0;
-            const attPct = reg > 0 ? Math.round(((Number(w.attended) || 0) / reg) * 100) : 0;
-            const certPct = reg > 0 ? Math.round(((Number(w.certificates) || 0) / reg) * 100) : 0;
-
-            document.getElementById('detail-pct-attendance').innerText = `${attPct}%`;
-            document.getElementById('bar-attendance').style.width = `${Math.min(attPct, 100)}%`;
-            document.getElementById('detail-pct-certificates').innerText = `${certPct}%`;
-            document.getElementById('bar-certificates').style.width = `${Math.min(certPct, 100)}%`;
+            renderDetailMetrics(w);
 
             const linkContainer = document.getElementById('detail-link-container');
             if (w.presentationUrl && w.presentationUrl.trim() !== '') {
@@ -847,7 +825,47 @@
             document.getElementById('btn-edit-current').onclick = () => { closeDetail(); openModal(w.id); };
             document.getElementById('btn-delete-current').onclick = () => deleteWebinar(w.id);
 
+            // Abre el panel lateral AL INSTANTE
             document.getElementById('detail-drawer').classList.remove('hidden');
+
+            // Consulta Sheets en segundo plano sin frenar la apertura
+            if (w.sheetUrl && w.sheetUrl.trim() !== '') {
+                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-amber-600 flex items-center gap-1"><i class="ph-bold ph-arrows-clockwise animate-spin"></i> Actualizando...</span>`;
+                fetch(w.sheetUrl.trim())
+                    .then(res => res.ok ? res.json() : null)
+                    .then(data => {
+                        if (data && typeof data.count === 'number') {
+                            const changed = w.registered !== data.count;
+                            w.registered = data.count;
+                            document.getElementById('detail-sheet-status').innerHTML = `<span class="text-emerald-600 flex items-center gap-1"><i class="ph-bold ph-check-circle"></i> Conectado (${data.count} inscritos)</span>`;
+                            if (changed) {
+                                renderDetailMetrics(w);
+                                applyFilters();
+                                saveCloudData();
+                            }
+                        }
+                    })
+                    .catch(() => {
+                        document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">URL Guardada</span>`;
+                    });
+            } else {
+                document.getElementById('detail-sheet-status').innerHTML = `<span class="text-slate-400">Sin URL Vinculada</span>`;
+            }
+        }
+
+        function renderDetailMetrics(w) {
+            document.getElementById('detail-count-registered').innerText = w.registered || 0;
+            document.getElementById('detail-count-attended').innerText = w.attended || 0;
+            document.getElementById('detail-count-certificates').innerText = w.certificates || 0;
+
+            const reg = Number(w.registered) || 0;
+            const attPct = reg > 0 ? Math.round(((Number(w.attended) || 0) / reg) * 100) : 0;
+            const certPct = reg > 0 ? Math.round(((Number(w.certificates) || 0) / reg) * 100) : 0;
+
+            document.getElementById('detail-pct-attendance').innerText = `${attPct}%`;
+            document.getElementById('bar-attendance').style.width = `${Math.min(attPct, 100)}%`;
+            document.getElementById('detail-pct-certificates').innerText = `${certPct}%`;
+            document.getElementById('bar-certificates').style.width = `${Math.min(certPct, 100)}%`;
         }
 
         function closeDetail() {
