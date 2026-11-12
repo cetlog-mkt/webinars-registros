@@ -65,41 +65,47 @@
 </head>
 <body class="min-h-screen flex flex-col bg-cetlog-bgLight pb-16 md:pb-0">
 
-    <!-- 1. HEADER NAVEGACIÓN CORPORATIVA -->
+    <!-- 1. HEADER NAVEGACIÓN CORPORATIVA RESPONSIVA -->
     <header class="bg-white border-b border-cetlog-border sticky top-0 z-30 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
                 
-                <div class="flex items-center space-x-3">
+                <!-- Logo CETLOG -->
+                <div class="flex items-center space-x-2 shrink-0">
                     <img src="logocolor.png" 
                          alt="Logo CETLOG" 
-                         class="h-9 w-auto object-contain"
+                         class="h-7 sm:h-9 w-auto object-contain"
                          onerror="this.onerror=null; this.src='logocolor.png';">
                     <span class="text-xs font-semibold text-cetlog-orange uppercase tracking-wider hidden sm:inline border-l border-cetlog-border pl-2.5">Registro Webinars</span>
                 </div>
 
-                <div class="flex items-center space-x-2 sm:space-x-3">
-                    <!-- Botón de Actualización Manual -->
-                    <button onclick="fetchCloudData()" title="Actualizar Datos en Vivo" class="p-2 text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-cetlog-border transition-colors flex items-center gap-1.5 text-xs font-bold">
+                <!-- Botones de Acción (Optimizados para Móvil) -->
+                <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+                    <!-- Sincronizar -->
+                    <button onclick="fetchCloudData()" title="Actualizar Datos" class="p-2 text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-cetlog-border transition-colors flex items-center justify-center">
                         <i class="ph-bold ph-arrows-clockwise text-sm text-cetlog-orange"></i>
-                        <span class="hidden md:inline">Actualizar</span>
                     </button>
 
-                    <button onclick="toggleFilterMobile()" class="md:hidden p-2 text-cetlog-blue bg-cetlog-surface rounded-lg border border-cetlog-border">
-                        <i class="ph-bold ph-funnel text-base"></i>
+                    <!-- Filtros Móvil -->
+                    <button onclick="toggleFilterMobile()" title="Filtrar" class="md:hidden p-2 text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-cetlog-border">
+                        <i class="ph-bold ph-funnel text-sm"></i>
                     </button>
 
+                    <!-- Fondos Zoom -->
                     <a href="https://drive.google.com/drive/folders/16mdT1wc-8MYGIO_m2YgB1da-0I3poR8P?usp=sharing" 
                        target="_blank" 
                        rel="noopener noreferrer" 
-                       class="inline-flex items-center px-3 py-2 bg-cetlog-surface hover:bg-gray-100 text-cetlog-blue border border-cetlog-border text-xs font-bold rounded-lg transition-all shadow-sm">
-                        <i class="ph-bold ph-folder-open mr-1.5 text-cetlog-orange text-sm"></i>
-                        <span class="hidden sm:inline">Fondos Zoom</span>
+                       title="Fondos Zoom"
+                       class="inline-flex items-center p-2 sm:px-3 sm:py-2 bg-cetlog-surface hover:bg-gray-100 text-cetlog-blue border border-cetlog-border text-xs font-bold rounded-lg transition-all shadow-sm">
+                        <i class="ph-bold ph-folder-open text-cetlog-orange text-sm"></i>
+                        <span class="hidden sm:inline ml-1.5">Fondos Zoom</span>
                     </a>
                     
-                    <button onclick="openModal()" class="inline-flex items-center px-3.5 py-2 bg-cetlog-orange hover:bg-cetlog-orangeHover text-white text-xs font-bold rounded-lg transition-all shadow-sm active:scale-95">
-                        <i class="ph-bold ph-plus mr-1.5 text-sm"></i>
-                        <span>Nuevo Webinar</span>
+                    <!-- Nuevo Webinar -->
+                    <button onclick="openModal()" class="inline-flex items-center px-2.5 py-2 sm:px-3.5 sm:py-2 bg-cetlog-orange hover:bg-cetlog-orangeHover text-white text-xs font-bold rounded-lg transition-all shadow-sm active:scale-95">
+                        <i class="ph-bold ph-plus text-sm sm:mr-1.5"></i>
+                        <span class="hidden sm:inline">Nuevo Webinar</span>
+                        <span class="sm:hidden ml-1">Nuevo</span>
                     </button>
                 </div>
             </div>
@@ -498,7 +504,7 @@
         </div>
     </div>
 
-<!-- 7. LÓGICA JAVASCRIPT CON CORRECCIÓN ROBUSTA DE AVATAR Y FETCH DE INSCRITOS -->
+    <!-- 7. LÓGICA JAVASCRIPT CON RENDERIZADO DE MÉTRICAS EN TARJETAS MÓVILES -->
     <script>
         const JSONBIN_BIN_ID = "6af4a293ffd5d16053b9edfb";
         const JSONBIN_MASTER_KEY = "$2a$10$wV.adj28KIOXYBNm3wzQ4eUtquTbe1VD8Riihu1XU8hLZ4MuLnzQy";
@@ -589,7 +595,6 @@
             }
         }
 
-        /* --- CORRECCIÓN DEFINITIVA DE MANEJO DE AVATARES E INICIALES --- */
         function getInitialsAvatar(name, roleColorClass = 'bg-cetlog-blue') {
             if (!name || name.trim() === '') {
                 return `<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold text-xs shrink-0"><i class="ph-bold ph-user"></i></div>`;
@@ -612,7 +617,6 @@
             tempDiv.innerHTML = getInitialsAvatar(name, roleColorClass);
             imgElement.replaceWith(tempDiv.firstElementChild);
         }
-        /* ----------------------------------------------------------------- */
 
         function formatDate(dateStr) {
             if (!dateStr) return '-';
@@ -707,7 +711,7 @@
                     <td class="py-3 px-5 font-semibold text-cetlog-grayText">${formatDate(w.date)}</td>
                     <td class="py-3 px-5 text-right font-extrabold text-cetlog-blue">${w.registered || 0}</td>
                     <td class="py-3 px-5 text-right font-extrabold text-blue-600">${w.attended || 0}</td>
-                    <td class="py-3 px-4 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
+                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
                     <td class="py-3 px-4 text-center">
                         <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface hover:bg-slate-200 text-cetlog-blue font-bold rounded text-[11px] border border-cetlog-border transition-colors">
                             Detalle <i class="ph-bold ph-caret-right text-[10px]"></i>
@@ -716,22 +720,40 @@
                 `;
                 tbody.appendChild(tr);
 
-                // Render Mobile
+                // Render Mobile con Mini-Métricas
                 const card = document.createElement('div');
-                card.className = "bg-white border border-cetlog-border rounded-xl p-3 space-y-2.5 shadow-sm";
+                card.className = "bg-white border border-cetlog-border rounded-xl p-3.5 space-y-3 shadow-sm";
                 card.innerHTML = `
                     <div class="flex justify-between items-start gap-2">
                         <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase ${badgeClass}">${w.status}</span>
                         <span class="text-[11px] font-semibold text-cetlog-grayText">${formatDate(w.date)}</span>
                     </div>
+
                     <h4 class="font-extrabold text-cetlog-blue text-xs leading-snug cursor-pointer" onclick="openDetail('${w.id}')">${w.title}</h4>
+
+                    <!-- Mini-métricas visuales en Tarjeta Celular -->
+                    <div class="grid grid-cols-3 gap-1.5 py-1.5 px-2 bg-cetlog-surface rounded-lg border border-slate-100 text-center">
+                        <div>
+                            <span class="text-[8px] font-bold text-cetlog-grayText uppercase block">Inscritos</span>
+                            <span class="text-xs font-extrabold text-cetlog-blue">${w.registered || 0}</span>
+                        </div>
+                        <div>
+                            <span class="text-[8px] font-bold text-blue-700 uppercase block">Zoom</span>
+                            <span class="text-xs font-extrabold text-blue-600">${w.attended || 0}</span>
+                        </div>
+                        <div>
+                            <span class="text-[8px] font-bold text-cetlog-orange uppercase block">Certif.</span>
+                            <span class="text-xs font-extrabold text-cetlog-orange">${w.certificates || 0}</span>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-between pt-1 border-t border-slate-100">
                         <div class="flex items-center space-x-2">
                             ${getAvatarHTML(w.instructor, w.instructorPhoto, 'bg-cetlog-blue')}
-                            <span class="text-[11px] font-semibold text-cetlog-blue truncate max-w-[120px]">${w.instructor || 'Sin instructor'}</span>
+                            <span class="text-[11px] font-semibold text-cetlog-blue truncate max-w-[110px]">${w.instructor || 'Sin instructor'}</span>
                         </div>
-                        <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface text-cetlog-blue font-bold rounded text-[10px] border border-cetlog-border">
-                            Ver Detalle
+                        <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-white hover:bg-slate-50 text-cetlog-blue font-bold rounded-lg text-[10px] border border-cetlog-border flex items-center gap-1 shadow-sm">
+                            Ver Detalle <i class="ph-bold ph-caret-right text-[9px]"></i>
                         </button>
                     </div>
                 `;
