@@ -79,7 +79,7 @@
                     <span class="text-xs font-semibold text-cetlog-orange uppercase tracking-wider hidden sm:inline border-l border-cetlog-border pl-2.5">Registro Webinars</span>
                 </div>
 
-                <!-- Botones de Acción (Optimizados para Móvil) -->
+                <!-- Botones de Acción -->
                 <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
                     <!-- Sincronizar -->
                     <button onclick="fetchCloudData()" title="Actualizar Datos" class="p-2 text-cetlog-blue bg-cetlog-surface hover:bg-slate-200 rounded-lg border border-cetlog-border transition-colors flex items-center justify-center">
@@ -115,7 +115,7 @@
     <!-- CONTAINER PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6 w-full">
 
-        <!-- 2. RESUMEN GENERAL -->
+        <!-- 2. RESUMEN GENERAL (5 KPIs ESTÉTICOS) -->
         <section>
             <div class="mb-2.5 flex items-center justify-between">
                 <h2 class="text-xs font-bold uppercase tracking-wider text-cetlog-grayText">Resumen General</h2>
@@ -124,59 +124,75 @@
                 </span>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                <!-- KPI 1: Programados -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Programados</p>
+                        <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Programados</p>
                         <p class="text-xl sm:text-2xl font-extrabold text-cetlog-blue mt-0.5" id="kpi-total">0</p>
                     </div>
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-cetlog-statusBlueBg text-cetlog-statusBlueText flex items-center justify-center shrink-0">
-                        <i class="ph-bold ph-calendar-blank text-lg sm:text-xl"></i>
+                    <div class="w-9 h-9 rounded-lg bg-cetlog-statusBlueBg text-cetlog-statusBlueText flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-calendar-blank text-lg"></i>
                     </div>
                 </div>
 
+                <!-- KPI 2: Total Inscritos -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Total Inscritos</p>
+                        <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Total Inscritos</p>
                         <p class="text-xl sm:text-2xl font-extrabold text-cetlog-blue mt-0.5" id="kpi-registered">0</p>
                     </div>
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-cetlog-surface text-cetlog-blue flex items-center justify-center shrink-0">
-                        <i class="ph-bold ph-users text-lg sm:text-xl"></i>
+                    <div class="w-9 h-9 rounded-lg bg-cetlog-surface text-cetlog-blue flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-users text-lg"></i>
                     </div>
                 </div>
 
+                <!-- KPI 3: Ingresaron Zoom -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm">
                     <div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Ingresaron Zoom</p>
+                        <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Ingresaron Zoom</p>
                         <p class="text-xl sm:text-2xl font-extrabold text-blue-600 mt-0.5" id="kpi-attended">0</p>
                     </div>
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                        <i class="ph-bold ph-video-camera text-lg sm:text-xl"></i>
+                    <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-video-camera text-lg"></i>
                     </div>
                 </div>
 
+                <!-- KPI 4: Certificados (Solicitados / Pagados) -->
                 <div class="bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm border-l-4 border-l-cetlog-orange">
                     <div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-cetlog-grayText uppercase">Certificados</p>
-                        <p class="text-xl sm:text-2xl font-extrabold text-cetlog-orange mt-0.5" id="kpi-certificates">0</p>
+                        <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Certificados</p>
+                        <div class="flex items-baseline gap-1.5 mt-0.5">
+                            <p class="text-xl sm:text-2xl font-extrabold text-cetlog-orange" id="kpi-paid">0</p>
+                            <span class="text-[11px] font-bold text-cetlog-grayText" title="Solicitados">/ <span id="kpi-certificates">0</span> sol.</span>
+                        </div>
                     </div>
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-50 text-cetlog-orange flex items-center justify-center shrink-0">
-                        <i class="ph-bold ph-certificate text-lg sm:text-xl"></i>
+                    <div class="w-9 h-9 rounded-lg bg-orange-50 text-cetlog-orange flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-certificate text-lg"></i>
+                    </div>
+                </div>
+
+                <!-- KPI 5: Recaudación Total -->
+                <div class="col-span-2 lg:col-span-1 bg-white border border-cetlog-border p-3.5 rounded-xl flex items-center justify-between shadow-sm border-l-4 border-l-emerald-500">
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-semibold text-cetlog-grayText uppercase">Recaudación</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-0.5 truncate" id="kpi-revenue">S/ 0</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-currency-circle-dollar text-lg"></i>
                     </div>
                 </div>
             </div>
         </section>
 
-<!-- 3. BARRA DE FILTROS (DISEÑO MÓVIL REORGANIZADO) -->
+        <!-- 3. BARRA DE FILTROS -->
         <section class="bg-white border border-cetlog-border rounded-xl p-3.5 shadow-sm space-y-3">
             <div class="flex items-center justify-between gap-2">
-                <!-- Título Izquierda -->
                 <div class="flex items-center gap-1.5 min-w-0">
                     <i class="ph-bold ph-calendar-blank text-cetlog-orange text-sm shrink-0"></i>
                     <span class="text-xs font-bold text-cetlog-blue truncate">Calendarización</span>
                 </div>
 
-                <!-- Contador + Botón Filtro Derecha -->
                 <div class="flex items-center gap-2 shrink-0">
                     <span id="record-count" class="text-[10px] bg-cetlog-surface text-cetlog-blue font-semibold px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap">0 eventos</span>
                     
@@ -187,7 +203,6 @@
                 </div>
             </div>
 
-            <!-- Contenedor Desplegable de Filtros -->
             <div id="filter-container" class="hidden md:flex flex-col md:flex-row gap-2.5 items-stretch md:items-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
                 <div class="relative flex-1">
                     <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
@@ -240,19 +255,25 @@
                             <th class="py-3 px-5 cursor-pointer hover:text-cetlog-blue transition-colors" onclick="sortBy('title')">
                                 Webinar <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
                             </th>
-                            <th class="py-3 px-5 cursor-pointer hover:text-cetlog-blue transition-colors w-36" onclick="sortBy('date')">
+                            <th class="py-3 px-4 cursor-pointer hover:text-cetlog-blue transition-colors w-32" onclick="sortBy('date')">
                                 Fecha <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
                             </th>
-                            <th class="py-3 px-5 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-24" onclick="sortBy('registered')">
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-24" onclick="sortBy('registered')">
                                 Inscritos <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
                             </th>
-                            <th class="py-3 px-5 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-28" onclick="sortBy('attended')">
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-20" onclick="sortBy('attended')">
                                 Zoom <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
                             </th>
-                            <th class="py-3 px-5 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-28" onclick="sortBy('certificates')">
-                                Certificados <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-24" onclick="sortBy('certificates')">
+                                Solicitados <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
                             </th>
-                            <th class="py-3 px-4 text-center w-32">Acción</th>
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-24" onclick="sortBy('paidCertificates')">
+                                Pagados <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
+                            </th>
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-cetlog-blue transition-colors w-28" onclick="sortBy('revenue')">
+                                Recaudado <i class="ph-bold ph-arrows-down-up text-[10px] ml-1"></i>
+                            </th>
+                            <th class="py-3 px-4 text-center w-28">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="summary-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
@@ -331,11 +352,14 @@
                     </div>
                 </div>
 
+                <!-- RESULTADOS DE PARTICIPACIÓN Y CIERRE -->
                 <div class="border border-cetlog-border rounded-xl p-4 space-y-4 bg-white">
                     <h4 class="text-[11px] font-bold text-cetlog-blue uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="ph-bold ph-chart-bar-horizontal text-cetlog-orange text-sm"></i> Resultados de Participación
+                        <i class="ph-bold ph-chart-bar-horizontal text-cetlog-orange text-sm"></i> Embudo de Participación y Ventas
                     </h4>
-                    <div class="grid grid-cols-3 gap-2 text-center">
+                    
+                    <!-- Grid 2x2 de Contadores -->
+                    <div class="grid grid-cols-2 gap-2.5 text-center">
                         <div class="bg-cetlog-surface p-2.5 rounded-lg border border-slate-200">
                             <span class="text-[9px] text-cetlog-grayText font-bold block uppercase">Inscritos</span>
                             <span class="text-base font-extrabold text-cetlog-blue" id="detail-count-registered">0</span>
@@ -345,11 +369,27 @@
                             <span class="text-base font-extrabold text-blue-600" id="detail-count-attended">0</span>
                         </div>
                         <div class="bg-orange-50 p-2.5 rounded-lg border border-orange-100">
-                            <span class="text-[9px] text-cetlog-orange font-bold block uppercase">Certificados</span>
+                            <span class="text-[9px] text-cetlog-orange font-bold block uppercase">Cert. Solicitados</span>
                             <span class="text-base font-extrabold text-cetlog-orange" id="detail-count-certificates">0</span>
+                        </div>
+                        <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-200">
+                            <span class="text-[9px] text-emerald-700 font-bold block uppercase">Cert. Pagados</span>
+                            <span class="text-base font-extrabold text-emerald-600" id="detail-count-paid">0</span>
                         </div>
                     </div>
 
+                    <!-- Tarjeta Destacada de Recaudación -->
+                    <div class="bg-emerald-600 text-white p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-100 block">Recaudación Total del Evento</span>
+                            <span class="text-xl font-extrabold mt-0.5 block" id="detail-count-revenue">S/ 0.00</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center">
+                            <i class="ph-bold ph-currency-circle-dollar text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Barras de Conversión -->
                     <div class="space-y-3 pt-1">
                         <div>
                             <div class="flex justify-between text-[11px] mb-1 font-medium">
@@ -362,11 +402,20 @@
                         </div>
                         <div>
                             <div class="flex justify-between text-[11px] mb-1 font-medium">
-                                <span class="text-cetlog-grayText">Certificados Emitidos vs. Inscritos</span>
+                                <span class="text-cetlog-grayText">Solicitudes Cert. vs. Asistentes Zoom</span>
                                 <span class="font-bold text-cetlog-orange" id="detail-pct-certificates">0%</span>
                             </div>
                             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                                 <div id="bar-certificates" class="bg-cetlog-orange h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1 font-medium">
+                                <span class="text-cetlog-grayText">Cierre de Pago (Pagados vs. Solicitados)</span>
+                                <span class="font-bold text-emerald-600" id="detail-pct-paid">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div id="bar-paid" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -415,7 +464,7 @@
                 </button>
             </div>
 
-            <form id="webinar-form" onsubmit="saveWebinar(event)" class="p-5 space-y-4 text-xs">
+            <form id="webinar-form" onsubmit="saveWebinar(event)" class="p-5 space-y-4 text-xs max-h-[82vh] overflow-y-auto">
                 <input type="hidden" id="form-id">
 
                 <div class="space-y-3">
@@ -484,20 +533,33 @@
                     </div>
                 </div>
 
+                <!-- SECCIÓN 4 ACTUALIZADA CON MÉTRICAS MANUALES DE CIERRE -->
                 <div class="space-y-3 pt-2">
-                    <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">4. Estadísticas del Webinar</h4>
-                    <div class="grid grid-cols-3 gap-3">
+                    <h4 class="text-[10px] font-bold text-cetlog-orange uppercase tracking-wider border-b border-slate-100 pb-1">4. Estadísticas y Cierre Comercial (Manual)</h4>
+                    
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block font-semibold text-cetlog-blue mb-1">Inscritos</label>
                             <input type="number" min="0" id="form-registered" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-cetlog-blue focus:outline-none focus:border-cetlog-orange">
                         </div>
                         <div>
-                            <label class="block font-semibold text-cetlog-blue mb-1">Zoom</label>
+                            <label class="block font-semibold text-cetlog-blue mb-1">Ingresaron Zoom</label>
                             <input type="number" min="0" id="form-attended" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-blue-600 focus:outline-none focus:border-cetlog-orange">
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 bg-cetlog-surface p-3 rounded-xl border border-slate-200">
                         <div>
-                            <label class="block font-semibold text-cetlog-blue mb-1">Certificados</label>
-                            <input type="number" min="0" id="form-certificates" value="0" class="w-full px-3 py-2 bg-cetlog-bgLight border border-cetlog-border rounded-lg text-xs font-bold text-cetlog-orange focus:outline-none focus:border-cetlog-orange">
+                            <label class="block font-semibold text-cetlog-blue mb-1 text-[11px]">Cert. Solicitados</label>
+                            <input type="number" min="0" id="form-certificates" value="0" class="w-full px-2.5 py-2 bg-white border border-cetlog-border rounded-lg text-xs font-bold text-cetlog-orange focus:outline-none focus:border-cetlog-orange">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cetlog-blue mb-1 text-[11px]">Cert. Pagados</label>
+                            <input type="number" min="0" id="form-paid-certificates" value="0" class="w-full px-2.5 py-2 bg-white border border-cetlog-border rounded-lg text-xs font-bold text-emerald-600 focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cetlog-blue mb-1 text-[11px]">Recaudado (S/)</label>
+                            <input type="number" min="0" step="0.01" id="form-revenue" value="0" class="w-full px-2.5 py-2 bg-white border border-cetlog-border rounded-lg text-xs font-bold text-emerald-700 focus:outline-none focus:border-emerald-500">
                         </div>
                     </div>
                 </div>
@@ -510,7 +572,7 @@
         </div>
     </div>
 
-    <!-- 7. LÓGICA JAVASCRIPT CON RENDERIZADO DE MÉTRICAS EN TARJETAS MÓVILES -->
+    <!-- 7. LÓGICA JAVASCRIPT -->
     <script>
         const JSONBIN_BIN_ID = "6af4a293ffd5d16053b9edfb";
         const JSONBIN_MASTER_KEY = "$2a$10$wV.adj28KIOXYBNm3wzQ4eUtquTbe1VD8Riihu1XU8hLZ4MuLnzQy";
@@ -523,8 +585,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchCloudData();
         });
-async function fetchCloudData() {
-            // 1. Carga inmediata desde memoria local si existe (0 segundos de espera visual)
+
+        async function fetchCloudData() {
             const local = localStorage.getItem('cetlog_webinars');
             if (local) {
                 webinars = JSON.parse(local);
@@ -544,9 +606,7 @@ async function fetchCloudData() {
                 if (Array.isArray(result.record)) {
                     webinars = result.record;
                     localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
-                    applyFilters(); // Muestra los datos de JSONBin de inmediato
-                    
-                    // 2. Consulta Google Sheets en paralelo sin bloquear la pantalla
+                    applyFilters();
                     updateRegisteredCountsFromSheets();
                 }
                 updateSyncStatus('Nube Sincronizada', 'text-emerald-600', 'ph-cloud-check');
@@ -561,7 +621,6 @@ async function fetchCloudData() {
             if (webhooks.length === 0) return;
 
             let updatedAny = false;
-            // Ejecuta todas las consultas a Sheets al mismo tiempo (en paralelo)
             await Promise.all(webhooks.map(async (w) => {
                 try {
                     const res = await fetch(w.sheetUrl.trim());
@@ -582,6 +641,7 @@ async function fetchCloudData() {
                 await saveCloudData();
             }
         }
+
         async function saveCloudData() {
             updateSyncStatus('Guardando...', 'text-amber-600', 'ph-arrows-clockwise animate-spin');
             localStorage.setItem('cetlog_webinars', JSON.stringify(webinars));
@@ -608,6 +668,11 @@ async function fetchCloudData() {
                 statusEl.className = `text-[11px] font-semibold flex items-center gap-1 ${textColorClass}`;
                 statusEl.innerHTML = `<i class="ph-bold ${iconClass} text-sm"></i> ${text}`;
             }
+        }
+
+        function formatCurrency(amount) {
+            const num = Number(amount) || 0;
+            return `S/ ${num.toLocaleString('es-PE', { minimumFractionDigits: num % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })}`;
         }
 
         function getInitialsAvatar(name, roleColorClass = 'bg-cetlog-blue') {
@@ -663,10 +728,10 @@ async function fetchCloudData() {
             });
 
             filtered.sort((a, b) => {
-                let valA = a[currentSort.field] || '';
-                let valB = b[currentSort.field] || '';
-                if (typeof valA === 'number') {
-                    return currentSort.direction === 'asc' ? valA - valB : valB - valA;
+                let valA = a[currentSort.field] ?? '';
+                let valB = b[currentSort.field] ?? '';
+                if (['registered', 'attended', 'certificates', 'paidCertificates', 'revenue'].includes(currentSort.field)) {
+                    return currentSort.direction === 'asc' ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
                 }
                 return currentSort.direction === 'asc' 
                     ? String(valA).localeCompare(String(valB)) 
@@ -683,11 +748,15 @@ async function fetchCloudData() {
             const totalReg = data.reduce((sum, w) => sum + (Number(w.registered) || 0), 0);
             const totalAtt = data.reduce((sum, w) => sum + (Number(w.attended) || 0), 0);
             const totalCert = data.reduce((sum, w) => sum + (Number(w.certificates) || 0), 0);
+            const totalPaid = data.reduce((sum, w) => sum + (Number(w.paidCertificates) || 0), 0);
+            const totalRev = data.reduce((sum, w) => sum + (Number(w.revenue) || 0), 0);
 
             document.getElementById('kpi-total').innerText = totalScheduled;
             document.getElementById('kpi-registered').innerText = totalReg;
             document.getElementById('kpi-attended').innerText = totalAtt;
             document.getElementById('kpi-certificates').innerText = totalCert;
+            document.getElementById('kpi-paid').innerText = totalPaid;
+            document.getElementById('kpi-revenue').innerText = formatCurrency(totalRev);
 
             const tbody = document.getElementById('summary-table-body');
             const mobileContainer = document.getElementById('mobile-cards-container');
@@ -707,6 +776,9 @@ async function fetchCloudData() {
                 if (w.status === 'Realizado') badgeClass = 'bg-cetlog-statusGreenBg text-cetlog-statusGreenText';
                 if (w.status === 'Cancelado') badgeClass = 'bg-cetlog-statusRedBg text-cetlog-statusRedText';
 
+                const paidCount = Number(w.paidCertificates) || 0;
+                const revFormatted = formatCurrency(w.revenue);
+
                 // Render Escritorio
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
@@ -723,10 +795,12 @@ async function fetchCloudData() {
                             </div>
                         </div>
                     </td>
-                    <td class="py-3 px-5 font-semibold text-cetlog-grayText">${formatDate(w.date)}</td>
-                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-blue">${w.registered || 0}</td>
-                    <td class="py-3 px-5 text-right font-extrabold text-blue-600">${w.attended || 0}</td>
-                    <td class="py-3 px-5 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
+                    <td class="py-3 px-4 font-semibold text-cetlog-grayText">${formatDate(w.date)}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-cetlog-blue">${w.registered || 0}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-blue-600">${w.attended || 0}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-cetlog-orange">${w.certificates || 0}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-emerald-600">${paidCount}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-emerald-700">${revFormatted}</td>
                     <td class="py-3 px-4 text-center">
                         <button onclick="openDetail('${w.id}')" class="px-2.5 py-1 bg-cetlog-surface hover:bg-slate-200 text-cetlog-blue font-bold rounded text-[11px] border border-cetlog-border transition-colors">
                             Detalle <i class="ph-bold ph-caret-right text-[10px]"></i>
@@ -735,7 +809,7 @@ async function fetchCloudData() {
                 `;
                 tbody.appendChild(tr);
 
-                // Render Mobile con Mini-Métricas
+                // Render Mobile con Embudo Completo y Recaudación
                 const card = document.createElement('div');
                 card.className = "bg-white border border-cetlog-border rounded-xl p-3.5 space-y-3 shadow-sm";
                 card.innerHTML = `
@@ -746,19 +820,29 @@ async function fetchCloudData() {
 
                     <h4 class="font-extrabold text-cetlog-blue text-xs leading-snug cursor-pointer" onclick="openDetail('${w.id}')">${w.title}</h4>
 
-                    <!-- Mini-métricas visuales en Tarjeta Celular -->
-                    <div class="grid grid-cols-3 gap-1.5 py-1.5 px-2 bg-cetlog-surface rounded-lg border border-slate-100 text-center">
-                        <div>
-                            <span class="text-[8px] font-bold text-cetlog-grayText uppercase block">Inscritos</span>
-                            <span class="text-xs font-extrabold text-cetlog-blue">${w.registered || 0}</span>
+                    <!-- Mini-métricas del embudo -->
+                    <div class="bg-cetlog-surface rounded-lg border border-slate-100 p-2 space-y-2">
+                        <div class="grid grid-cols-4 gap-1 text-center">
+                            <div>
+                                <span class="text-[8px] font-bold text-cetlog-grayText uppercase block">Inscritos</span>
+                                <span class="text-xs font-extrabold text-cetlog-blue">${w.registered || 0}</span>
+                            </div>
+                            <div>
+                                <span class="text-[8px] font-bold text-blue-700 uppercase block">Zoom</span>
+                                <span class="text-xs font-extrabold text-blue-600">${w.attended || 0}</span>
+                            </div>
+                            <div>
+                                <span class="text-[8px] font-bold text-cetlog-orange uppercase block">Solicit.</span>
+                                <span class="text-xs font-extrabold text-cetlog-orange">${w.certificates || 0}</span>
+                            </div>
+                            <div>
+                                <span class="text-[8px] font-bold text-emerald-700 uppercase block">Pagados</span>
+                                <span class="text-xs font-extrabold text-emerald-600">${paidCount}</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-[8px] font-bold text-blue-700 uppercase block">Zoom</span>
-                            <span class="text-xs font-extrabold text-blue-600">${w.attended || 0}</span>
-                        </div>
-                        <div>
-                            <span class="text-[8px] font-bold text-cetlog-orange uppercase block">Certif.</span>
-                            <span class="text-xs font-extrabold text-cetlog-orange">${w.certificates || 0}</span>
+                        <div class="pt-1.5 border-t border-slate-200/70 flex items-center justify-between px-1">
+                            <span class="text-[9px] font-bold text-cetlog-grayText uppercase">Recaudado</span>
+                            <span class="text-xs font-extrabold text-emerald-700">${revFormatted}</span>
                         </div>
                     </div>
 
@@ -776,7 +860,7 @@ async function fetchCloudData() {
             });
         }
 
-function openDetail(id) {
+        function openDetail(id) {
             const w = webinars.find(item => String(item.id) === String(id));
             if (!w) return;
 
@@ -825,10 +909,8 @@ function openDetail(id) {
             document.getElementById('btn-edit-current').onclick = () => { closeDetail(); openModal(w.id); };
             document.getElementById('btn-delete-current').onclick = () => deleteWebinar(w.id);
 
-            // Abre el panel lateral AL INSTANTE
             document.getElementById('detail-drawer').classList.remove('hidden');
 
-            // Consulta Sheets en segundo plano sin frenar la apertura
             if (w.sheetUrl && w.sheetUrl.trim() !== '') {
                 document.getElementById('detail-sheet-status').innerHTML = `<span class="text-amber-600 flex items-center gap-1"><i class="ph-bold ph-arrows-clockwise animate-spin"></i> Actualizando...</span>`;
                 fetch(w.sheetUrl.trim())
@@ -854,18 +936,30 @@ function openDetail(id) {
         }
 
         function renderDetailMetrics(w) {
-            document.getElementById('detail-count-registered').innerText = w.registered || 0;
-            document.getElementById('detail-count-attended').innerText = w.attended || 0;
-            document.getElementById('detail-count-certificates').innerText = w.certificates || 0;
-
             const reg = Number(w.registered) || 0;
-            const attPct = reg > 0 ? Math.round(((Number(w.attended) || 0) / reg) * 100) : 0;
-            const certPct = reg > 0 ? Math.round(((Number(w.certificates) || 0) / reg) * 100) : 0;
+            const att = Number(w.attended) || 0;
+            const cert = Number(w.certificates) || 0;
+            const paid = Number(w.paidCertificates) || 0;
+            const rev = Number(w.revenue) || 0;
+
+            document.getElementById('detail-count-registered').innerText = reg;
+            document.getElementById('detail-count-attended').innerText = att;
+            document.getElementById('detail-count-certificates').innerText = cert;
+            document.getElementById('detail-count-paid').innerText = paid;
+            document.getElementById('detail-count-revenue').innerText = `S/ ${rev.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            const attPct = reg > 0 ? Math.round((att / reg) * 100) : 0;
+            const certPct = att > 0 ? Math.round((cert / att) * 100) : (reg > 0 ? Math.round((cert / reg) * 100) : 0);
+            const paidPct = cert > 0 ? Math.round((paid / cert) * 100) : 0;
 
             document.getElementById('detail-pct-attendance').innerText = `${attPct}%`;
             document.getElementById('bar-attendance').style.width = `${Math.min(attPct, 100)}%`;
+
             document.getElementById('detail-pct-certificates').innerText = `${certPct}%`;
             document.getElementById('bar-certificates').style.width = `${Math.min(certPct, 100)}%`;
+
+            document.getElementById('detail-pct-paid').innerText = `${paidPct}%`;
+            document.getElementById('bar-paid').style.width = `${Math.min(paidPct, 100)}%`;
         }
 
         function closeDetail() {
@@ -900,6 +994,8 @@ function openDetail(id) {
                     document.getElementById('form-registered').value = w.registered || 0;
                     document.getElementById('form-attended').value = w.attended || 0;
                     document.getElementById('form-certificates').value = w.certificates || 0;
+                    document.getElementById('form-paid-certificates').value = w.paidCertificates || 0;
+                    document.getElementById('form-revenue').value = w.revenue || 0;
                 }
             } else {
                 document.getElementById('modal-title').innerText = 'Registrar Nuevo Webinar';
@@ -930,7 +1026,9 @@ function openDetail(id) {
                 sheetUrl: document.getElementById('form-sheet-url').value.trim(),
                 registered: Number(document.getElementById('form-registered').value) || 0,
                 attended: Number(document.getElementById('form-attended').value) || 0,
-                certificates: Number(document.getElementById('form-certificates').value) || 0
+                certificates: Number(document.getElementById('form-certificates').value) || 0,
+                paidCertificates: Number(document.getElementById('form-paid-certificates').value) || 0,
+                revenue: Number(document.getElementById('form-revenue').value) || 0
             };
 
             if (id) {
